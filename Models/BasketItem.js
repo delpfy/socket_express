@@ -3,13 +3,14 @@ import mongoose from "mongoose";
 const BasketItemSchema = mongoose.Schema(
   {
 
-    user: {
+    name: {
         type: String,
         required: true,
     },
 
-    name: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
 
@@ -33,6 +34,11 @@ const BasketItemSchema = mongoose.Schema(
       required: true,
     },
 
+    amount : {
+      type: Number,
+      required: true,
+    },
+
     image: [
       {
         type: String,
@@ -45,4 +51,4 @@ const BasketItemSchema = mongoose.Schema(
   }
 );
 
-export default mongoose.Schema("BasketItem", BasketItemSchema);
+export default mongoose.model("BasketItem", BasketItemSchema);

@@ -39,4 +39,4 @@ const ItemSchema = mongoose.Schema(
   }
 );
 
-export default mongoose.Schema("Item", ItemSchema);
+export default mongoose.model("Item", ItemSchema);

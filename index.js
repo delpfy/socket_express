@@ -5,9 +5,14 @@ import { validationResult } from "express-validator";
 import { authorizationValidator } from "./Validations/Authorization.js";
 import { registrationValidator } from "./Validations/Registration.js";
 import { addingItemValidator } from "./Validations/AddingItem.js";
-import * as userController from "./Controllers/UserController.js";
+
 import checkAuthorization from "./Utils/checkAuthorization.js";
 import checkRole from "./Utils/checkRole.js";
+
+import * as userController from "./Controllers/UserController.js";
+import * as itemController from "./Controllers/ItemController.js";
+import * as basketController from "./Controllers/BasketItemController.js";
+
 
 mongoose
   .connect(
@@ -35,30 +40,14 @@ app.post("/authorize", authorizationValidator, userController.authorization);
 
 app.post("/register", registrationValidator, userController.registration);
 
-app.post("/item/create", checkAuthorization , checkRole ,addingItemValidator, (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      error: validationResult(req).array(),
-    });
-  }
+app.post("/items", checkAuthorization , checkRole ,addingItemValidator, itemController.create);
+app.get("/items",  itemController.getAll);
+app.get("/items/:id", itemController.getOne);
+// app.delete("/items", checkAuthorization, itemController.remove); 
+// app.patch("/items", checkAuthorization, addingItemValidator, itemController.update);
 
-  res.status(200).json({
-    success: true,
-    request: req.body,
-  });
-});
-
-app.post("/basketitem/create", checkAuthorization , addingItemValidator, (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      error: validationResult(req).array(),
-    });
-  }
-
-  res.status(200).json({
-    success: true,
-    request: req.body,
-  });
-});
+ app.post("/basketitems", checkAuthorization , addingItemValidator, basketController.create); 
+ app.get("/basketitems",  basketController.getAll);
+// app.get("/basketitems/:id", basketController.getOne);
+// app.delete("/basketitems", checkAuthorization, basketController.remove); 
+// app.patch("/basketitems", checkAuthorization, addingItemValidator, basketController.update);

@@ -4,9 +4,9 @@ export default (req, res, next) => {
   try {
     const token = (req.headers.authorization || "").replace(/Bearer\s?/, "");
     
-        jwt.verify(token, "greeneyes");
         
-        const userRole = jwt.decode(token, "greeneyes")._role;
+        
+        const userRole = jwt.verify(token, "greeneyes")._role;
         if (userRole != "manager") {
           return res.status(403).json({
             success: false,

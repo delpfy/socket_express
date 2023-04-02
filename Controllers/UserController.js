@@ -104,17 +104,17 @@ export const authorization = async (req, res) => {
 export const authorizationStatus = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId);
-
+    
     if (!user) {
       return res.status(403).json({
         success: false,
         error: "Not found",
       });
     }
-
+    
     return res.status(200).json({
       success: true,
-      token: user,
+      user: user,
     });
   } catch (error) {
     return res.status(403).json({
