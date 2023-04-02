@@ -19,12 +19,14 @@ export const registration = async (req, res) => {
       fullName: req.body.fullName,
       email: req.body.email,
       passwordHash: await bcrypt.hash(req.body.password, salt),
+      role : req.body.role,
       avatarUrl: req.body.avatar,
     }).save();
 
     const token = jwt.sign(
       {
         _id: user._id,
+        _role : user.role
       },
       "greeneyes",
       {
@@ -78,6 +80,7 @@ export const authorization = async (req, res) => {
     const token = jwt.sign(
       {
         _id: user._id,
+        _role : user.role,
       },
       "greeneyes",
       {

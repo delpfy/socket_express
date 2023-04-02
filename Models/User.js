@@ -18,6 +18,11 @@ const UserSchema = mongoose.Schema(
       unique: true,
     },
 
+    role: {
+      type: String,
+      required: true,
+    },
+
     avatarUrl: {
       type: String,
     },
