@@ -11,30 +11,29 @@ export const create = async (req, res) => {
 
   try {
     await BasketItemModel.findOneAndUpdate(
-        { name: req.body.name }, 
-        { $inc: { amount: 1 } }, 
-        { new: true, upsert: true } 
-      )
-      .then((doc) => {
-        if(!doc){
-            const item = new BasketItemModel({
-                name: req.body.name,
-                description: req.body.description,
-                category: req.body.category,
-                price: req.body.price,
-                rating: req.body.rating,
-                image: req.body.image,
-                amount: req.body.amount,
-                user: req.userId,
-              }).save();
-          
-            res.status(200).json({
-              success: true,
-              item: item,
-            });
-        }
+      { name: req.body.name },
+      { $inc: { amount: 1 } },
+      { new: false, upsert: false }
+    )
+      .then(async (doc) => {
+        if (!doc) {
+          const item = await new BasketItemModel({
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            price: req.body.price,
+            rating: req.body.rating,
+            image: req.body.image,
+            amount: req.body.amount,
+            user: req.userId,
+          }).save();
 
-        return res.status(200).json({
+          return res.status(200).json({
+            success: true,
+            item: item,
+          });
+        } else {
+          return res.status(200).json({
             success: true,
             doc: doc,
           });
