@@ -13,9 +13,9 @@ export const create = async (req, res) => {
     
 
     await BasketItemModel.findOneAndUpdate(
-        { name: req.body.name }, // фильтр для поиска товара в коллекции
-        { $inc: { amount: 1 } }, // оператор $inc для инкремента поля amount
-        { new: true, upsert: true } // опции: new - вернуть обновленный документ, upsert - создать документ, если он не найден
+        { name: req.body.name }, 
+        { $inc: { amount: 1 } }, 
+        { new: true, upsert: true } 
       )
       .then((doc) => {
         if(!doc){
