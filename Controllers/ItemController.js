@@ -42,7 +42,7 @@ export const getAll = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      items: error,
+      error: error,
     });
   }
 };
@@ -50,21 +50,72 @@ export const getAll = async (req, res) => {
 export const getOne = async (req, res) => {
   try {
     const item = await ItemModel.findById(req.params.id);
-    if(item){
-        res.status(200).json({
-            success: true,
-            items: item,
-          });
+    if (!item) {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        item: item,
+      });
     }
-    
   } catch (error) {
     res.status(500).json({
-        success: false,
-        items: error,
-      });
+      success: false,
+      error: error,
+    });
   }
 };
 
-export const remove = async (req, res) => {};
+export const remove = async (req, res) => {
+  try {
+    await ItemModel.findOneAndDelete({
+      _id: req.params.id,
+    })
+      .then(() => {
+        res.status(200).json({
+          success: true,
+        });
+      })
+      .catch(() => {
+        res.status(404).json({
+          success: false,
+          error: "Not found",
+        });
+      });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
 
-export const update = async (req, res) => {};
+export const update = async (req, res) => {
+  try {
+    await ItemModel.updateOne(
+      {
+        _id: req.params.id,
+      },
+      {
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category,
+        price: req.body.price,
+        rating: req.body.rating,
+        image: req.body.image,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};

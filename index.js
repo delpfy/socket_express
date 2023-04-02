@@ -43,11 +43,10 @@ app.post("/register", registrationValidator, userController.registration);
 app.post("/items", checkAuthorization , checkRole ,addingItemValidator, itemController.create);
 app.get("/items",  itemController.getAll);
 app.get("/items/:id", itemController.getOne);
-// app.delete("/items", checkAuthorization, itemController.remove); 
-// app.patch("/items", checkAuthorization, addingItemValidator, itemController.update);
+app.delete("/items/:id",  checkAuthorization,checkRole, itemController.remove); 
+app.patch("/items/:id",  checkAuthorization, checkRole,  addingItemValidator, itemController.update);
 
- app.post("/basketitems", checkAuthorization , addingItemValidator, basketController.create); 
- app.get("/basketitems",  basketController.getAll);
-// app.get("/basketitems/:id", basketController.getOne);
-// app.delete("/basketitems", checkAuthorization, basketController.remove); 
-// app.patch("/basketitems", checkAuthorization, addingItemValidator, basketController.update);
+app.post("/basketitems", checkAuthorization , addingItemValidator, basketController.create); 
+app.get("/basketitems",  checkAuthorization, basketController.getAll);
+app.get("/basketitems/:id", checkAuthorization, basketController.getOne);
+app.delete("/basketitems/:id", checkAuthorization, basketController.remove); 

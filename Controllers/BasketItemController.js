@@ -10,48 +10,42 @@ export const create = async (req, res) => {
   }
 
   try {
-    
-
     await BasketItemModel.findOneAndUpdate(
-        { name: req.body.name }, // фильтр для поиска товара в коллекции
-        { $inc: { amount: 1 } }, // оператор $inc для инкремента поля amount
-        { new: true, upsert: true } // опции: new - вернуть обновленный документ, upsert - создать документ, если он не найден
-      )
-      .then((doc) => {
-        if(!doc){
-            const item = new BasketItemModel({
-                name: req.body.name,
-                description: req.body.description,
-                category: req.body.category,
-                price: req.body.price,
-                rating: req.body.rating,
-                image: req.body.image,
-                amount: req.body.amount,
-                user: req.userId,
-              }).save();
-          
-            res.status(200).json({
-              success: true,
-              item: item,
-            });
-        }
+      { name: req.body.name },
+      { $inc: { amount: 1 } },
+      { new: false, upsert: false }
+    )
+      .then(async (doc) => {
+        if (!doc) {
+          const item = await new BasketItemModel({
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            price: req.body.price,
+            rating: req.body.rating,
+            image: req.body.image,
+            amount: req.body.amount,
+            user: req.userId,
+          }).save();
 
-        return res.status(200).json({
+          return res.status(200).json({
+            success: true,
+            item: item,
+          });
+        } else {
+          return res.status(200).json({
             success: true,
             doc: doc,
           });
+        }
       })
       .catch((error) => {
         return res.status(500).json({
-            success: false,
-            error: error,
-          });
+          success: false,
+          error: error,
+        });
       });
-
-      
   } catch (error) {
-    
-    
     return res.status(500).json({
       success: false,
       error: error,
@@ -71,6 +65,69 @@ export const getAll = async (req, res) => {
     res.status(500).json({
       success: false,
       items: error,
+    });
+  }
+};
+
+export const getOne = async (req, res) => {
+  try {
+    const item = await BasketItemModel.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      item: item,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    await BasketItemModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { $inc: { amount: -1 } },
+      { new: false, upsert: false }
+    )
+      .then(async (doc) => {
+        if (doc.amount - 1 <= 0) {
+          await BasketItemModel.findOneAndDelete({ _id: req.params.id })
+            .then(() => {
+              return res.status(200).json({
+                success: true,
+              });
+            })
+            .catch(() => {
+              return res.status(404).json({
+                success: false,
+                error: "Not found",
+              });
+            });
+        } else {
+          return res.status(200).json({
+            success: true,
+            doc: doc,
+          });
+        }
+      })
+      .catch((error) => {
+        return res.status(404).json({
+          success: false,
+          error: "Not found",
+        });
+      });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
     });
   }
 };
