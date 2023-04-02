@@ -1,14 +1,8 @@
 import ItemModel from "../Models/Item.js";
-import { validationResult } from "express-validator";
 
 export const create = async (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      error: validationResult(req).array(),
-    });
-  }
 
+  // Trying to create new item and if successful, save it to database.
   try {
     const item = await new ItemModel({
       name: req.body.name,
@@ -33,6 +27,7 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
+    // Finding all items.
     const items = await ItemModel.find();
 
     res.status(200).json({
@@ -49,7 +44,9 @@ export const getAll = async (req, res) => {
 
 export const getOne = async (req, res) => {
   try {
+    // Trying to find item by provided id.
     const item = await ItemModel.findById(req.params.id);
+
     if (!item) {
       res.status(404).json({
         success: false,
@@ -71,6 +68,7 @@ export const getOne = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
+    // Trying to find item by provided id.
     await ItemModel.findOneAndDelete({
       _id: req.params.id,
     })
@@ -95,6 +93,7 @@ export const remove = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
+    // Trying to find item by provided id.
     await ItemModel.updateOne(
       {
         _id: req.params.id,

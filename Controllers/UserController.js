@@ -2,18 +2,14 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import UserModel from "../Models/User.js";
 
-import { validationResult } from "express-validator";
+
 
 export const registration = async (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      error: validationResult(req).array(),
-    });
-  }
-
+  
+  // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
 
+  // Creating new user and saving it to database.
   try {
     const user = await new UserModel({
       fullName: req.body.fullName,
@@ -23,9 +19,12 @@ export const registration = async (req, res) => {
       avatarUrl: req.body.avatar,
     }).save();
 
+    // If successful, generate token, in future it will be decrypted.
     const token = jwt.sign(
       {
         _id: user._id,
+
+        // Adding a new field over default.
         _role : user.role
       },
       "greeneyes",
@@ -39,6 +38,7 @@ export const registration = async (req, res) => {
       token: token,
     });
   } catch (error) {
+
     console.log("REGISTER ERROR \n" + error);
     return res.status(500).json({
       success: false,
@@ -48,15 +48,11 @@ export const registration = async (req, res) => {
 };
 
 export const authorization = async (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      error: validationResult(req).array(),
-    });
-  }
-
+  
   try {
+    // Trying to find user by provided email.
     const user = await UserModel.findOne({ email: req.body.email });
+    
     if (!user) {
       console.log("USER NOT FOUND ERROR \n" + error);
       return res.status(404).json({
@@ -65,6 +61,7 @@ export const authorization = async (req, res) => {
       });
     }
 
+    // If user has been found, compare password.
     const isPassValid = await bcrypt.compare(
       req.body.password,
       user._doc.passwordHash
@@ -77,6 +74,7 @@ export const authorization = async (req, res) => {
       });
     }
 
+    // If all is OK, generate token.
     const token = jwt.sign(
       {
         _id: user._id,
@@ -93,6 +91,7 @@ export const authorization = async (req, res) => {
       token: token,
     });
   } catch (error) {
+
     console.log("LOGIN ERROR \n" + error);
     return res.status(500).json({
       success: false,
@@ -103,8 +102,10 @@ export const authorization = async (req, res) => {
 
 export const authorizationStatus = async (req, res) => {
   try {
+    // Get user by id.
     const user = await UserModel.findById(req.userId);
     
+
     if (!user) {
       return res.status(403).json({
         success: false,

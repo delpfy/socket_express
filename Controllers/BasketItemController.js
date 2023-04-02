@@ -1,21 +1,21 @@
 import BasketItemModel from "../Models/BasketItem.js";
-import { validationResult } from "express-validator";
+
 
 export const create = async (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      error: validationResult(req).array(),
-    });
-  }
+  
 
   try {
+    // Trying to find item by provided name and if found increment 
+    // its amount value, istead of creating a new one.
+
     await BasketItemModel.findOneAndUpdate(
       { name: req.body.name },
-      { $inc: { amount: 1 } },
+      { $inc: { amount: 1 } }, // Increment
       { new: false, upsert: false }
     )
       .then(async (doc) => {
+
+        // If not found, create new item and add to database.
         if (!doc) {
           const item = await new BasketItemModel({
             name: req.body.name,
@@ -55,6 +55,8 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
+    // Trying to get all items, 
+    // populate("user").exec() - to display full user info, insted of token.
     const items = await BasketItemModel.find().populate("user").exec();
 
     res.status(200).json({
@@ -71,6 +73,7 @@ export const getAll = async (req, res) => {
 
 export const getOne = async (req, res) => {
   try {
+    // Trying to get one item by id.
     const item = await BasketItemModel.findById(req.params.id);
     if (!item) {
       return res.status(404).json({
@@ -92,12 +95,16 @@ export const getOne = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
+    // Trying to find item by provided id and if found decrement 
+    // its amount value, istead of removing full item.
     await BasketItemModel.findOneAndUpdate(
       { _id: req.params.id },
-      { $inc: { amount: -1 } },
+      { $inc: { amount: -1 } }, // Decrement
       { new: false, upsert: false }
     )
       .then(async (doc) => {
+
+        // If amount is 0 or lower - remove item from database.
         if (doc.amount - 1 <= 0) {
           await BasketItemModel.findOneAndDelete({ _id: req.params.id })
             .then(() => {
