@@ -15,7 +15,7 @@ export const create = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      item: item,
+      items: item,
     });
   } catch (error) {
     return res.status(500).json({
@@ -55,7 +55,30 @@ export const getOne = async (req, res) => {
     } else {
       res.status(200).json({
         success: true,
-        item: item,
+        items: item,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+export const getOneCategory = async (req, res) => {
+  try {
+    // Trying to find item by provided category.
+    const category = req.params.category;
+    const item = await ItemModel.find({category: { $eq: category }});
+
+    if (!item) {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    } else {
+      res.status(200).json({
+        items: item,
       });
     }
   } catch (error) {

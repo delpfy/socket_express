@@ -30,7 +30,7 @@ export const create = async (req, res) => {
 
           return res.status(200).json({
             success: true,
-            item: item,
+            items: item,
           });
         } else {
           return res.status(200).json({
@@ -83,7 +83,7 @@ export const getOne = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      item: item,
+      items: item,
     });
   } catch (error) {
     res.status(500).json({
