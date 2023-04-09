@@ -83,6 +83,7 @@ app.post(
   basketController.create
 );
 app.get("/basketitems", checkAuthorization, basketController.getAll);
+app.get("/basketitems/user/:id", checkAuthorization, basketController.getAllByUser);
 app.get("/basketitems/:id", checkAuthorization, basketController.getOne);
 app.delete("/basketitems/:id", checkAuthorization, basketController.remove);
 

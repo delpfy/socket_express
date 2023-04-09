@@ -35,7 +35,7 @@ export const create = async (req, res) => {
         } else {
           return res.status(200).json({
             success: true,
-            doc: doc,
+            items: doc,
           });
         }
       })
@@ -67,6 +67,30 @@ export const getAll = async (req, res) => {
     res.status(500).json({
       success: false,
       items: error,
+    });
+  }
+};
+
+export const getAllByUser = async (req, res) => {
+  try {
+    // Trying to find item by id.
+    console.log('USER ID ' + req.userId)
+    const item = await BasketItemModel.find({user: { $eq: req.params.id }});
+
+    if (!item) {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    } else {
+      res.status(200).json({
+        items: item,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
     });
   }
 };
@@ -121,7 +145,7 @@ export const remove = async (req, res) => {
         } else {
           return res.status(200).json({
             success: true,
-            doc: doc,
+            items: doc,
           });
         }
       })
