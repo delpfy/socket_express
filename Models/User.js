@@ -22,6 +22,11 @@ const UserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    
+    expences : {
+      type: Number,
+      required: true
+    },
 
     avatarUrl: {
       type: String,

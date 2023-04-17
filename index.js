@@ -44,7 +44,7 @@ app.get("/authme",  checkAuthorization, userController.authorizationStatus);
 
 app.post("/authorize",  authorizationValidator, validationErrorsHandler, userController.authorization);
 
-app.post("/register", validationErrorsHandler, validationErrorsHandler, registrationValidator, userController.registration);
+app.post("/register",  registrationValidator, validationErrorsHandler, userController.registration);
 
 // </User>
 

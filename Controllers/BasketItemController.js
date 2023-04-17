@@ -1,9 +1,9 @@
 import BasketItemModel from "../Models/BasketItem.js";
-
+import UserModel from '../Models/User.js'
+import jwt from "jsonwebtoken";
 
 export const create = async (req, res) => {
   
-
   try {
     // Trying to find item by provided name and if found increment 
     // its amount value, istead of creating a new one.
@@ -17,6 +17,7 @@ export const create = async (req, res) => {
 
         // If not found, create new item and add to database.
         if (!doc) {
+          
           const item = await new BasketItemModel({
             name: req.body.name,
             description: req.body.description,
@@ -27,17 +28,31 @@ export const create = async (req, res) => {
             amount: req.body.amount,
             user: req.userId,
           }).save();
-
+          
+          await UserModel.findOneAndUpdate(
+            { _id: req.userId },
+            { $inc: { expences: req.body.price } }, // Increment
+            { new: false, upsert: false }
+          )
+          
           return res.status(200).json({
             success: true,
             items: item,
           });
         } else {
+          
+          await UserModel.findOneAndUpdate(
+            { _id: req.userId },
+            { $inc: { expences: req.body.price } }, // Increment
+            { new: false, upsert: false }
+          )
+          
           return res.status(200).json({
             success: true,
             items: doc,
           });
         }
+
       })
       .catch((error) => {
         return res.status(500).json({
@@ -130,8 +145,14 @@ export const remove = async (req, res) => {
 
         // If amount is 0 or lower - remove item from database.
         if (doc.amount - 1 <= 0) {
+
           await BasketItemModel.findOneAndDelete({ _id: req.params.id })
-            .then(() => {
+            .then(async() => {
+              await UserModel.findOneAndUpdate(
+                { _id: req.userId },
+                { $inc: { expences: - doc.price } }, // Increment
+                { new: false, upsert: false }
+              )
               return res.status(200).json({
                 success: true,
               });
@@ -143,6 +164,12 @@ export const remove = async (req, res) => {
               });
             });
         } else {
+          
+          await UserModel.findOneAndUpdate(
+            { _id: req.userId },
+            { $inc: { expences: - doc.price } }, // Increment
+            { new: false, upsert: false }
+          )
           return res.status(200).json({
             success: true,
             items: doc,

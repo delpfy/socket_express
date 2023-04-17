@@ -14,6 +14,7 @@ export const registration = async (req, res) => {
     const user = await new UserModel({
       fullName: req.body.fullName,
       email: req.body.email,
+      expences : req.body.expences,
       passwordHash: await bcrypt.hash(req.body.password, salt),
       role : req.body.role,
       avatarUrl: req.body.avatar,
@@ -25,7 +26,7 @@ export const registration = async (req, res) => {
         _id: user._id,
 
         // Adding a new field over default.
-        _role : user.role
+        _role : user.role,
       },
       "greeneyes",
       {
