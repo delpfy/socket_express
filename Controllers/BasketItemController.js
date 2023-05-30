@@ -9,12 +9,13 @@ export const create = async (req, res) => {
     // its amount value, istead of creating a new one.
 
     await BasketItemModel.findOneAndUpdate(
-      { name: req.body.name },
+      { user: req.body._id, name: req.body.name },
       { $inc: { amount: 1 } }, // Increment
       { new: false, upsert: false }
     )
       .then(async (doc) => {
-
+        console.log("USER: " + req.body._id );
+        console.log("DOC: " + doc)
         // If not found, create new item and add to database.
         if (!doc) {
           
