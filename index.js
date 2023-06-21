@@ -27,10 +27,10 @@ mongoose
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
 const app = express();
-module.exports = app;
+
 
 // Trying to run server on port 4000.
-app.listen("4000", (err) => {
+app.listen(process.env.PORT || 4000, (err) => {
   return err ? console.log("SERVER ERROR \n" + err) : console.log("SERVER OK");
 });
 app.use(express.json());
