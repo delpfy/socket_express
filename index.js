@@ -21,7 +21,7 @@ import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
 // Connecting to database.
 mongoose
   .connect(
-    process.env.MONGODB_URI
+    "mongodb+srv://admin:qqqqqq@cluster0.x5jmimk.mongodb.net/test?retryWrites=true&w=majority"
   )
   .then(() => console.log("DATABASE OK"))
   .catch((err) => console.log("DATABASE ERROR \n" + err));
@@ -29,7 +29,7 @@ mongoose
 const app = express();
 
 // Trying to run server on port 4000.
-app.listen(process.env.PORT || 4000, (err) => {
+app.listen("4000", (err) => {
   return err ? console.log("SERVER ERROR \n" + err) : console.log("SERVER OK");
 });
 app.use(express.json());
