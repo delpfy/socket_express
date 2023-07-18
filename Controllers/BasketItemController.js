@@ -1,11 +1,10 @@
 import BasketItemModel from "../Models/BasketItem.js";
-import UserModel from '../Models/User.js'
+import UserModel from "../Models/User.js";
 import jwt from "jsonwebtoken";
 
 export const create = async (req, res) => {
-  
   try {
-    // Trying to find item by provided name and if found increment 
+    // Trying to find item by provided name and if found increment
     // its amount value, istead of creating a new one.
 
     await BasketItemModel.findOneAndUpdate(
@@ -14,11 +13,8 @@ export const create = async (req, res) => {
       { new: false, upsert: false }
     )
       .then(async (doc) => {
-        console.log("USER: " + req.body._id );
-        console.log("DOC: " + doc)
         // If not found, create new item and add to database.
         if (!doc) {
-          
           const item = await new BasketItemModel({
             name: req.body.name,
             description: req.body.description,
@@ -29,31 +25,29 @@ export const create = async (req, res) => {
             amount: req.body.amount,
             user: req.userId,
           }).save();
-          
+
           await UserModel.findOneAndUpdate(
             { _id: req.userId },
             { $inc: { expences: req.body.price } }, // Increment
             { new: false, upsert: false }
-          )
-          
+          );
+
           return res.status(200).json({
             success: true,
             items: item,
           });
         } else {
-          
           await UserModel.findOneAndUpdate(
             { _id: req.userId },
             { $inc: { expences: req.body.price } }, // Increment
             { new: false, upsert: false }
-          )
-          
+          );
+
           return res.status(200).json({
             success: true,
             items: doc,
           });
         }
-
       })
       .catch((error) => {
         return res.status(500).json({
@@ -71,7 +65,7 @@ export const create = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    // Trying to get all items, 
+    // Trying to get all items,
     // populate("user").exec() - to display full user info, insted of token.
     const items = await BasketItemModel.find().populate("user").exec();
 
@@ -90,8 +84,7 @@ export const getAll = async (req, res) => {
 export const getAllByUser = async (req, res) => {
   try {
     // Trying to find item by id.
-    console.log('USER ID ' + req.userId)
-    const item = await BasketItemModel.find({user: { $eq: req.params.id }});
+    const item = await BasketItemModel.find({ user: { $eq: req.params.id } });
 
     if (!item) {
       res.status(404).json({
@@ -135,7 +128,7 @@ export const getOne = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-    // Trying to find item by provided id and if found decrement 
+    // Trying to find item by provided id and if found decrement
     // its amount value, istead of removing full item.
     await BasketItemModel.findOneAndUpdate(
       { _id: req.params.id },
@@ -143,17 +136,16 @@ export const remove = async (req, res) => {
       { new: false, upsert: false }
     )
       .then(async (doc) => {
-
+        console.log("DOC AMOUNT " + doc.amount);
         // If amount is 0 or lower - remove item from database.
         if (doc.amount - 1 <= 0) {
-
           await BasketItemModel.findOneAndDelete({ _id: req.params.id })
-            .then(async() => {
+            .then(async () => {
               await UserModel.findOneAndUpdate(
                 { _id: req.userId },
-                { $inc: { expences: - doc.price } }, // Increment
+                { $inc: { expences: -doc.price  } }, // Increment
                 { new: false, upsert: false }
-              )
+              );
               return res.status(200).json({
                 success: true,
               });
@@ -165,12 +157,11 @@ export const remove = async (req, res) => {
               });
             });
         } else {
-          
           await UserModel.findOneAndUpdate(
             { _id: req.userId },
-            { $inc: { expences: - doc.price } }, // Increment
+            { $inc: { expences: -doc.price } }, // Decrement
             { new: false, upsert: false }
-          )
+          );
           return res.status(200).json({
             success: true,
             items: doc,
@@ -183,6 +174,56 @@ export const remove = async (req, res) => {
           error: "Not found",
         });
       });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+
+export const deleteItem = async (req, res) => {
+  await BasketItemModel.findOneAndDelete({ _id: req.params.id })
+    .then(async (doc) => {
+      await UserModel.findOneAndUpdate(
+        { _id: req.userId },
+        { $inc: { expences: -doc.price * doc.amount } }, // Increment
+        { new: false, upsert: false }
+      );
+      return res.status(200).json({
+        success: true,
+      });
+    })
+    .catch(() => {
+      return res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    });
+};
+
+export const update = async (req, res) => {
+  try {
+    // Trying to find item by provided id.
+    await BasketItemModel.updateOne(
+      {
+        _id: req.params.id,
+      },
+      {
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category,
+        price: req.body.price,
+        rating: req.body.rating,
+        image: req.body.image,
+        amount: req.body.amount,
+        user: req.userId,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

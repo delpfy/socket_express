@@ -87,5 +87,13 @@ app.get("/basketitems", checkAuthorization, basketController.getAll);
 app.get("/basketitems/user/:id", checkAuthorization, basketController.getAllByUser);
 app.get("/basketitems/:id", checkAuthorization, basketController.getOne);
 app.delete("/basketitems/:id", checkAuthorization, basketController.remove);
+app.delete("/basketitems/remove/:id", checkAuthorization, basketController.deleteItem);
+app.patch(
+  "/basketitems/:id",
+  checkAuthorization,
+  addingItemValidator,
+  validationErrorsHandler,
+  basketController.update
+);
 
 // <Basket items CRUD>
