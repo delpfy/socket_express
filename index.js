@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello");
 });
 
-app.post("/upload", cors(), checkAuthorization, upload.single(`image`), (req, res) => {
+app.post("/upload", checkAuthorization, upload.single(`image`), (req, res) => {
   res.status(200).json({
     url: `/uploads/${Date.now()}${req.file.originalname}`,
   });
