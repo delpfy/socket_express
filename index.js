@@ -28,8 +28,15 @@ mongoose
   .then(() => console.log("DATABASE OK"))
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
+  
 const app = express();
-app.use(cors());
+const corsOptions = {
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}
+app.use(cors(corsOptions));
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
