@@ -30,13 +30,8 @@ mongoose
 
   
 const app = express();
-const corsOptions = {
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}
-app.use(cors(corsOptions));
+var cors = require('cors')
+app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
