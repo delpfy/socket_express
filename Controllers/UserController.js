@@ -125,3 +125,31 @@ export const authorizationStatus = async (req, res) => {
     });
   }
 };
+
+
+export const update = async (req, res) => {
+  const salt = await bcrypt.genSalt(10);
+  try {
+    // Trying to find item by provided id.
+    await UserModel.updateOne(
+      {
+        _id: req.userId,
+      },
+      {
+        fullName: req.body.fullName,
+        email: req.body.email,
+        passwordHash: await bcrypt.hash(req.body.password, salt),
+        avatarUrl: req.body.avatar,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};

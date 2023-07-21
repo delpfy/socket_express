@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import cors from 'cors'
+import cors from "cors";
 // Validations
 import { authorizationValidator } from "./Validations/Authorization.js";
 import { registrationValidator } from "./Validations/Registration.js";
@@ -17,6 +17,7 @@ import * as basketController from "./Controllers/BasketItemController.js";
 
 // validationErrorsHandler - in case that field are named wrong or its value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
+import multer from "multer";
 
 // Connecting to database.
 mongoose
@@ -28,12 +29,23 @@ mongoose
 
 const app = express();
 
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
 
 // Trying to run server on port 4000.
 app.listen(process.env.PORT || 4000, (err) => {
   return err ? console.log("SERVER ERROR \n" + err) : console.log("SERVER OK");
 });
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 app.use(cors());
 
 // <User>
@@ -41,11 +53,35 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello");
 });
 
-app.get("/authme",  checkAuthorization, userController.authorizationStatus);
+app.post("/upload", checkAuthorization, upload.single("image"), (req, res) => {
+  res.status(200).json({
+    url: `/uploads/${req.file.originalname}`,
+  });
+});
 
-app.post("/authorize",  authorizationValidator, validationErrorsHandler, userController.authorization);
+app.get("/authme", checkAuthorization, userController.authorizationStatus);
 
-app.post("/register",  registrationValidator, validationErrorsHandler, userController.registration);
+app.post(
+  "/authorize",
+  authorizationValidator,
+  validationErrorsHandler,
+  userController.authorization
+);
+
+app.post(
+  "/register",
+  registrationValidator,
+  validationErrorsHandler,
+  userController.registration
+);
+
+app.patch(
+  "/update",
+  checkAuthorization,
+  validationErrorsHandler,
+  registrationValidator,
+  userController.update
+);
 
 // </User>
 
@@ -84,10 +120,18 @@ app.post(
   basketController.create
 );
 app.get("/basketitems", checkAuthorization, basketController.getAll);
-app.get("/basketitems/user/:id", checkAuthorization, basketController.getAllByUser);
+app.get(
+  "/basketitems/user/:id",
+  checkAuthorization,
+  basketController.getAllByUser
+);
 app.get("/basketitems/:id", checkAuthorization, basketController.getOne);
 app.delete("/basketitems/:id", checkAuthorization, basketController.remove);
-app.delete("/basketitems/remove/:id", checkAuthorization, basketController.deleteItem);
+app.delete(
+  "/basketitems/remove/:id",
+  checkAuthorization,
+  basketController.deleteItem
+);
 app.patch(
   "/basketitems/:id",
   checkAuthorization,
