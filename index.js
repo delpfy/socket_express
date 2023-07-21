@@ -29,6 +29,7 @@ mongoose
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
 const app = express();
+app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -50,7 +51,7 @@ app.listen(process.env.PORT || 4000, (err) => {
 });
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-app.use(cors());
+
 
 // <User>
 app.get("/", (req, res) => {
