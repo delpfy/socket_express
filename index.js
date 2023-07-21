@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import fs from "fs";
 // Validations
 import { authorizationValidator } from "./Validations/Authorization.js";
 import { registrationValidator } from "./Validations/Registration.js";
@@ -31,10 +32,13 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
+    if(!fs.existsSync('uploads')){
+      fs.mkdirSync('uploads')
+    }
     cb(null, "uploads");
   },
   filename: (_, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, `${Date.now()}--${file.originalname}`);
   },
 });
 
@@ -53,9 +57,9 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello");
 });
 
-app.post("/upload", checkAuthorization, upload.single("image"), (req, res) => {
+app.post("/upload", checkAuthorization, upload.single(`image`), (req, res) => {
   res.status(200).json({
-    url: `/uploads/${req.file.originalname}`,
+    url: `/uploads/${Date.now()}${req.file.originalname}`,
   });
 });
 
