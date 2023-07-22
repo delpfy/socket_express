@@ -58,12 +58,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Welcome to the backstage");
 });
 
-app.post(
-  "/upload",
-  checkAuthorization,
-  upload.single(`image`),
-  userController.uploadFile
-);
+
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
 
@@ -72,6 +67,13 @@ app.post(
   authorizationValidator,
   validationErrorsHandler,
   userController.authorization
+);
+
+app.post(
+  "/upload",
+  checkAuthorization,
+  upload.single(`image`),
+  userController.uploadFile
 );
 
 app.post(
