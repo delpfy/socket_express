@@ -22,6 +22,11 @@ const ItemSchema = mongoose.Schema(
       required: true,
     },
 
+    sale: {
+      type: Number,
+      required: true,
+    },
+
     rating: {
       type: Number,
       required: true,
