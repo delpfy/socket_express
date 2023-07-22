@@ -28,15 +28,14 @@ mongoose
   .then(() => console.log("DATABASE OK"))
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
-  
 const app = express();
 
 app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    if(!fs.existsSync('uploads')){
-      fs.mkdirSync('uploads')
+    if (!fs.existsSync("uploads")) {
+      fs.mkdirSync("uploads");
     }
     cb(null, "uploads");
   },
@@ -54,17 +53,17 @@ app.listen(process.env.PORT || 4000, (err) => {
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-
 // <User>
 app.get("/", (req, res) => {
-  res.status(200).send("Hello");
+  res.status(200).send("Welcome to the backstage");
 });
 
-app.post("/upload", checkAuthorization, upload.single(`image`), (req, res) => {
-  res.status(200).json({
-    url: `/uploads/${Date.now()}${req.file.originalname}`,
-  });
-});
+app.post(
+  "/upload",
+  checkAuthorization,
+  upload.single(`image`),
+  userController.uploadFile
+);
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
 

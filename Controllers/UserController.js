@@ -154,5 +154,10 @@ export const update = async (req, res) => {
   }
 };
 
+export const uploadFile = (req, res) => {
+  res.status(200).json({
+    url: `/uploads/${Date.now()}${req.file.originalname}`,
+  });
+};
 
 
