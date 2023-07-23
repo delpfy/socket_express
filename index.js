@@ -6,6 +6,7 @@ import fs from "fs";
 import { authorizationValidator } from "./Validations/Authorization.js";
 import { registrationValidator } from "./Validations/Registration.js";
 import { addingItemValidator } from "./Validations/AddingItem.js";
+import { addingReviewValidator } from "./Validations/AddingReview.js";
 
 // checkAuthorization - checks if user is authorized.
 import checkAuthorization from "./Utils/checkAuthorization.js";
@@ -15,6 +16,7 @@ import checkRole from "./Utils/checkRole.js";
 import * as userController from "./Controllers/UserController.js";
 import * as itemController from "./Controllers/ItemController.js";
 import * as basketController from "./Controllers/BasketItemController.js";
+import * as reviewController from "./Controllers/ReviewController.js";
 
 // validationErrorsHandler - in case that field are named wrong or its value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
@@ -92,6 +94,28 @@ app.patch(
 );
 
 // </User>
+
+
+// <Review>
+app.post(
+  "/reviews",
+  checkAuthorization,
+  addingReviewValidator,
+  validationErrorsHandler,
+  reviewController.create
+);
+app.get("/reviews/:itemId", reviewController.getItemReviews);
+app.delete("/reviews/:itemId", checkAuthorization, reviewController.removeItemReview);
+app.patch(
+  "/reviews/:itemId",
+  checkAuthorization,
+  addingReviewValidator,
+  validationErrorsHandler,
+  reviewController.updateItemReview
+);
+
+//</Review>
+
 
 // <Items CRUD>
 
