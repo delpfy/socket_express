@@ -79,8 +79,7 @@ export const removeItemReview = async (req, res) => {
   try {
     // Trying to find item by provided id.
     await ReviewModel.findOneAndDelete({
-      user: req.userId,
-      item: req.params.itemId,
+      _id: req.params.reviewId,
     })
       .then((doc) => {
         if (doc) {
@@ -112,8 +111,7 @@ export const updateItemReview = async (req, res) => {
     // Trying to find item by provided id.
     await ReviewModel.updateOne(
       {
-        user: req.userId,
-       item: req.params.itemId,
+       _id: req.params.reviewId,
       },
       {
       user: req.userId,
