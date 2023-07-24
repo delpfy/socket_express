@@ -117,6 +117,7 @@ export const updateItemReview = async (req, res) => {
       },
       {
       user: req.userId,
+      userName: req.body.userName,
       description: req.body.description,
       rating: req.body.rating,
       advantages: req.body.advantages,
