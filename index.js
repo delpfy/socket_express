@@ -115,7 +115,7 @@ app.patch(
   reviewController.updateItemReview
 );
 app.patch(
-  "/reviews/user/:userId",
+  "/reviews/user/",
   checkAuthorization,
   validationErrorsHandler,
   reviewController.updateAllUserReviews
