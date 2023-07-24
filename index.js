@@ -105,6 +105,7 @@ app.post(
   reviewController.create
 );
 app.get("/reviews/:itemId", reviewController.getItemReviews);
+app.get("/reviews/user/:userId", checkAuthorization, reviewController.getUserReviews);
 app.delete("/reviews/:itemId", checkAuthorization, reviewController.removeItemReview);
 app.patch(
   "/reviews/:itemId",

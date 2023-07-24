@@ -6,6 +6,7 @@ export const create = async (req, res) => {
     const review = await new ReviewModel({
       item: req.body.item,
       user: req.userId,
+      userName: req.body.userName,
       description: req.body.description,
       rating: req.body.rating,
       advantages: req.body.advantages,
@@ -29,6 +30,31 @@ export const getItemReviews = async (req, res) => {
     // Trying to find item by id.
     const reviews = await ReviewModel.find({
       item: { $eq: req.params.itemId },
+    });
+
+    if (!reviews) {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    } else {
+      res.status(200).json({
+        reviews: reviews,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+
+export const getUserReviews = async (req, res) => {
+  try {
+    // Trying to find item by id.
+    const reviews = await ReviewModel.find({
+      user: { $eq: req.userId },
     });
 
     if (!reviews) {
