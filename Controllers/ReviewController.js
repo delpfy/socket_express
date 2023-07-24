@@ -111,15 +111,38 @@ export const updateItemReview = async (req, res) => {
     // Trying to find item by provided id.
     await ReviewModel.updateOne(
       {
-       _id: req.params.reviewId,
+        _id: req.params.reviewId,
       },
       {
-      user: req.userId,
-      userName: req.body.userName,
-      description: req.body.description,
-      rating: req.body.rating,
-      advantages: req.body.advantages,
-      disadvantages: req.body.disadvantages,
+        user: req.userId,
+        userName: req.body.userName,
+        description: req.body.description,
+        rating: req.body.rating,
+        advantages: req.body.advantages,
+        disadvantages: req.body.disadvantages,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+
+export const updateAllUserReviews = async (req, res) => {
+  try {
+    // Trying to find item by provided id.
+    await ReviewModel.updateMany(
+      {
+        user: { $eq: req.userId },
+      },
+      {
+        userName: req.body.userName,
       }
     );
 
