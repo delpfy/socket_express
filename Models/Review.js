@@ -21,7 +21,6 @@ const ReviewSchema = mongoose.Schema(
 
     description: {
       type: String,
-      required: true,
     },
 
     rating: {
@@ -31,12 +30,10 @@ const ReviewSchema = mongoose.Schema(
 
     advantages: {
       type: String,
-      required: true,
     },
 
     disadvantages: {
       type: String,
-      required: true,
     },
   },
   {
