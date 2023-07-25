@@ -119,7 +119,7 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
-    await ItemModel.updateOne(
+    const item = await ItemModel.updateOne(
       {
         _id: req.params.id,
       },
@@ -137,6 +137,7 @@ export const update = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      item: item
     });
   } catch (error) {
     res.status(500).json({
