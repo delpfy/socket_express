@@ -11,6 +11,7 @@ export const create = async (req, res) => {
       sale: req.body.sale,
       price: req.body.price,
       rating: req.body.rating,
+      reviewsAmount: req.body.reviewsAmount,
       image: req.body.image,
     }).save();
 
@@ -129,6 +130,7 @@ export const update = async (req, res) => {
         sale: req.body.sale,
         price: req.body.price,
         rating: req.body.rating,
+        reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
       }
     );
