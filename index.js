@@ -141,8 +141,6 @@ app.delete("/items/:id", checkAuthorization, checkRole, itemController.remove);
 app.patch(
   "/items/:id",
   checkAuthorization,
-  checkRole,
-  addingItemValidator,
   validationErrorsHandler,
   itemController.update
 );
