@@ -132,7 +132,8 @@ export const update = async (req, res) => {
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
-      }
+      },
+      {new: true}
     ).then((doc) => {
       if(!doc){
         res.status(400).json({
