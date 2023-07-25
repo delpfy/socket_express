@@ -119,7 +119,7 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
-    await ItemModel.updateOne(
+    await ItemModel.findOneAndUpdate(
       {
         _id: req.params.id,
       },
