@@ -119,7 +119,7 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
-    const item = await ItemModel.updateOne(
+    await ItemModel.updateOne(
       {
         _id: req.params.id,
       },
@@ -133,12 +133,22 @@ export const update = async (req, res) => {
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
       }
-    );
-
-    res.status(200).json({
-      success: true,
-      item: item
+    ).then((doc) => {
+      if(!doc){
+        res.status(400).json({
+          success: false,
+          error: "Item not found",
+        });
+      }
+      else{
+        res.status(200).json({
+          success: true,
+          item: doc
+        });
+      }
     });
+
+    
   } catch (error) {
     res.status(500).json({
       success: false,
