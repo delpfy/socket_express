@@ -11,6 +11,7 @@ export const create = async (req, res) => {
       rating: req.body.rating,
       advantages: req.body.advantages,
       disadvantages: req.body.disadvantages,
+      answers: req.body.answers,
     }).save();
 
     return res.status(200).json({
@@ -109,7 +110,7 @@ export const removeItemReview = async (req, res) => {
 export const updateItemReview = async (req, res) => {
   try {
     // Trying to find item by provided id.
-    await ReviewModel.updateOne(
+    await ReviewModel.findOneAndUpdate(
       {
         _id: req.params.reviewId,
       },
@@ -118,12 +119,24 @@ export const updateItemReview = async (req, res) => {
         rating: req.body.rating,
         advantages: req.body.advantages,
         disadvantages: req.body.disadvantages,
+        answers: req.body.answers,
+      },
+      {new: true}
+    ).then((doc) => {
+      if(!doc){
+        res.status(400).json({
+          success: false,
+          error: "Review not found",
+        });
       }
-    );
-
-    res.status(200).json({
-      success: true,
+      else{
+        res.status(200).json({
+          success: true,
+          item: doc
+        });
+      }
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
