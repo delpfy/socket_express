@@ -19,7 +19,7 @@ const ReviewSchema = mongoose.Schema(
       required: true,
     },
 
-    answers: [
+    replies: [
       {
         user: {
           type: String,

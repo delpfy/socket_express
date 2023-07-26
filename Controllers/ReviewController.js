@@ -11,7 +11,7 @@ export const create = async (req, res) => {
       rating: req.body.rating,
       advantages: req.body.advantages,
       disadvantages: req.body.disadvantages,
-      answers: req.body.answers,
+      replies: req.body.replies,
     }).save();
 
     return res.status(200).json({
@@ -119,7 +119,7 @@ export const updateItemReview = async (req, res) => {
         rating: req.body.rating,
         advantages: req.body.advantages,
         disadvantages: req.body.disadvantages,
-        answers: req.body.answers,
+        replies: req.body.replies,
       },
       {new: true}
     ).then((doc) => {
