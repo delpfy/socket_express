@@ -144,7 +144,7 @@ export const remove = async (req, res) => {
             .then(async () => {
               await UserModel.findOneAndUpdate(
                 { _id: req.userId },
-                { $inc: { expences: -doc.price  } }, // Increment
+                { $inc: { expences: -doc.price } }, // Increment
                 { new: false, upsert: false }
               );
               return res.status(200).json({

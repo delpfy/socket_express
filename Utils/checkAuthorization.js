@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 export default (req, res, next) => {
   // Removing word "Bearer" from token.
   const token = (req.headers.authorization || "").replace(/Bearer\s?/, "");
-  console.log("req.headers.authorization " + req.headers.authorization)
+  console.log("req.headers.authorization " + req.headers.authorization);
   if (!token) {
     // If failed to get token, user is not authorized.
     return res.status(403).json({

@@ -60,8 +60,6 @@ app.get("/", (req, res) => {
   res.status(200).send("Welcome to the backstage");
 });
 
-
-
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
 
 app.post(
@@ -95,7 +93,6 @@ app.patch(
 
 // </User>
 
-
 // <Review>
 app.post(
   "/reviews",
@@ -105,8 +102,16 @@ app.post(
   reviewController.create
 );
 app.get("/reviews/:itemId", reviewController.getItemReviews);
-app.get("/reviews/user/:userId", checkAuthorization, reviewController.getUserReviews);
-app.delete("/reviews/:reviewId", checkAuthorization, reviewController.removeItemReview);
+app.get(
+  "/reviews/user/:userId",
+  checkAuthorization,
+  reviewController.getUserReviews
+);
+app.delete(
+  "/reviews/:reviewId",
+  checkAuthorization,
+  reviewController.removeItemReview
+);
 app.patch(
   "/reviews/:reviewId",
   checkAuthorization,
@@ -122,7 +127,6 @@ app.patch(
 );
 
 //</Review>
-
 
 // <Items CRUD>
 

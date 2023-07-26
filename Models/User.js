@@ -22,10 +22,10 @@ const UserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    
-    expences : {
+
+    expences: {
       type: Number,
-      required: true
+      required: true,
     },
 
     avatarUrl: {
@@ -37,5 +37,4 @@ const UserSchema = mongoose.Schema(
   }
 );
 
-
-export default mongoose.model('User', UserSchema);
+export default mongoose.model("User", UserSchema);

@@ -2,15 +2,14 @@ import mongoose from "mongoose";
 
 const BasketItemSchema = mongoose.Schema(
   {
-
     name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
 
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
 
@@ -39,7 +38,7 @@ const BasketItemSchema = mongoose.Schema(
       required: true,
     },
 
-    amount : {
+    amount: {
       type: Number,
       required: true,
     },

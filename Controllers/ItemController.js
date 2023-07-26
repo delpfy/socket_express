@@ -1,7 +1,6 @@
 import ItemModel from "../Models/Item.js";
 
 export const create = async (req, res) => {
-
   // Trying to create new item and if successful, save it to database.
   try {
     const item = await new ItemModel({
@@ -71,7 +70,7 @@ export const getOneCategory = async (req, res) => {
   try {
     // Trying to find item by provided category.
     const category = req.params.category;
-    const item = await ItemModel.find({category: { $eq: category }});
+    const item = await ItemModel.find({ category: { $eq: category } });
 
     if (!item) {
       res.status(404).json({
@@ -133,23 +132,20 @@ export const update = async (req, res) => {
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
       },
-      {new: true}
+      { new: true }
     ).then((doc) => {
-      if(!doc){
+      if (!doc) {
         res.status(400).json({
           success: false,
           error: "Item not found",
         });
-      }
-      else{
+      } else {
         res.status(200).json({
           success: true,
-          item: doc
+          item: doc,
         });
       }
     });
-
-    
   } catch (error) {
     res.status(500).json({
       success: false,

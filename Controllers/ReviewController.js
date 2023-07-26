@@ -121,22 +121,20 @@ export const updateItemReview = async (req, res) => {
         disadvantages: req.body.disadvantages,
         replies: req.body.replies,
       },
-      {new: true}
+      { new: true }
     ).then((doc) => {
-      if(!doc){
+      if (!doc) {
         res.status(400).json({
           success: false,
           error: "Review not found",
         });
-      }
-      else{
+      } else {
         res.status(200).json({
           success: true,
-          item: doc
+          item: doc,
         });
       }
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
