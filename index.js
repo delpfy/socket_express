@@ -49,10 +49,10 @@ app.use(function(req, res, next) {
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    if (!fs.existsSync("uploads")) {
-      fs.mkdirSync("uploads");
+    if (!fs.existsSync("avatars")) {
+      fs.mkdirSync("avatars");
     }
-    cb(null, "uploads");
+    cb(null, "avatars");
   },
   filename: (_, file, cb) => {
     cb(null, `${Date.now()}--${file.originalname}`);
@@ -66,7 +66,7 @@ app.listen(process.env.PORT || 4000, (err) => {
   return err ? console.log("SERVER ERROR \n" + err) : console.log("SERVER OK");
 });
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use("/avatars", express.static("avatars"));
 
 // <User>
 app.get("/", (req, res) => {

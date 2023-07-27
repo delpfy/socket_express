@@ -147,7 +147,15 @@ export const update = async (req, res) => {
 };
 
 export const uploadFile = (req, res) => {
-  res.status(200).json({
-    url: `/uploads/${Date.now()}--${req.file.originalname}`,
-  });
+  try {
+    res.status(200).json({
+      url: `/avatars/${Date.now()}--${req.file.originalname}`,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error
+    });
+  }
+  
 };
