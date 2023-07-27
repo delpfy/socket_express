@@ -33,7 +33,7 @@ mongoose
 const app = express();
 
 app.use(cors({
-  origin: ['https://localhost:3000', 'https://socketapp.vercel.app'],
+  origin: ['http://localhost:3000', 'https://socketapp.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 
