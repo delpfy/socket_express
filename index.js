@@ -32,10 +32,20 @@ mongoose
 
 const app = express();
 
-app.use(cors({
-  origin: ['http://localhost:3000', 'https://socketapp.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+app.use(function(req, res, next) {  
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, X-Api-Key'
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if ('OPTIONS' === req.method) {
+    res.sendStatus(200);
+  }
+  else {
+    next();
+  }
+});
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
