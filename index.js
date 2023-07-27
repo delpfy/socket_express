@@ -31,6 +31,7 @@ mongoose
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
 const app = express();
+const cors = require("cors");
 
 app.use(cors({
   origin: ['http://localhost:3000', 'https://socketapp.vercel.app'],
@@ -74,7 +75,6 @@ app.post(
 
 app.post(
   "/upload",
-  cors(),
   checkAuthorization,
   upload.single("image"),
   userController.uploadFile
