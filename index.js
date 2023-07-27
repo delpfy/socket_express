@@ -30,7 +30,7 @@ mongoose
   .then(() => console.log("DATABASE OK"))
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
-const app = express();
+const app = express(); 
 
 app.use(function(req, res, next) {  
   res.header('Access-Control-Allow-Origin', '*');
