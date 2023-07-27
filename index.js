@@ -32,7 +32,10 @@ mongoose
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://localhost:3000', 'https://socketapp.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
