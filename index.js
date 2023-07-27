@@ -74,6 +74,7 @@ app.post(
 
 app.post(
   "/upload",
+  cors(),
   checkAuthorization,
   upload.single("image"),
   userController.uploadFile
