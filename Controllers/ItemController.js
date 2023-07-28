@@ -117,7 +117,7 @@ export const remove = async (req, res) => {
 
 export const searchItem = async (req, res) => {
   try {
-    const items = await ItemModel.find({ name: {$eq: req.params.name}}).exec();
+    const items = await ItemModel.find({ name:  req.params.name}).exec();
     if (!items) {
       res.status(404).json({
         success: false,
