@@ -117,10 +117,8 @@ export const remove = async (req, res) => {
 
 export const searchItem = async (req, res) => {
   try {
-    const { query } = req.query;
-    const regex = new RegExp(query, "i");
 
-    const items = await ItemModel.find({ name: regex }).exec();
+    const items = await ItemModel.find({ name: {$eq: req.params.name}});
     res.status(200).json({
       success: true,
       items: items,
