@@ -117,7 +117,13 @@ export const remove = async (req, res) => {
 
 export const searchItem = async (req, res) => {
   try {
-    const items = await ItemModel.find({ name: {$eq: req.params.name}});
+
+    const items = await ItemModel.find({
+      "$or": [
+        {name: {$regex: req.params.name, $options: "i"}}
+      ]
+       
+      });
     if(items){
       res.status(200).json({
         success: true,
