@@ -115,6 +115,22 @@ export const remove = async (req, res) => {
   }
 };
 
+export const searchItem = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const regex = new RegExp(query, "i");
+
+    const items = await ItemModel.find({ name: regex }).exec();
+    res.status(200).json({
+      success: true,
+      items: items,
+    });
+  } catch (error) {
+    console.error("Error searching items:", error);
+    res.status(500).json({ error: "Error searching items" });
+  }
+};
+
 export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
