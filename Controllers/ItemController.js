@@ -117,21 +117,19 @@ export const remove = async (req, res) => {
 
 export const searchItem = async (req, res) => {
   try {
-    const { query } = req.query;
-    
-    const regex = new RegExp(query, "i");
-
-    const items = await ItemModel.find({ name: regex}).exec();
-    if (!items) {
-      res.status(404).json({
-        success: false,
-        error: "Not found",
-      });
-    } else {
+    const items = await ItemModel.find({ name: {$eq: req.params.name}});
+    if(items){
       res.status(200).json({
+        success: true,
         items: items,
       });
     }
+   else{
+    res.status(404).json({
+      success: false,
+      error: "Not found",
+    });
+   }
   } catch (error) {
     console.error("Error searching items:", error);
     res.status(500).json({ error: "Error searching items" });

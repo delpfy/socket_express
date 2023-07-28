@@ -153,7 +153,7 @@ app.post(
 );
 app.get("/items", itemController.getAll);
 app.get("/items/:id", itemController.getOne);
-app.get("/items/search", itemController.searchItem);
+app.get("/items/search/:name", itemController.searchItem);
 app.get("/items/category/:category", itemController.getOneCategory);
 app.delete("/items/:id", checkAuthorization, checkRole, itemController.remove);
 app.patch(
