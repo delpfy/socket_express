@@ -132,6 +132,7 @@ export const update = async (req, res) => {
         email: req.body.email,
         passwordHash: await bcrypt.hash(req.body.password, salt),
         avatarUrl: req.body.avatarUrl,
+        expences: req.body.expences
       }
     );
 
