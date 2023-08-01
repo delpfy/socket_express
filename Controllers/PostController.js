@@ -52,8 +52,7 @@ export const getOne = async (req, res) => {
       });
     } else {
       res.status(200).json({
-        success: true,
-        posts: post,
+        post
       });
     }
   } catch (error) {
