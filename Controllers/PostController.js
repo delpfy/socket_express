@@ -9,10 +9,11 @@ export const create = async (req, res) => {
         description: req.body.description,
         content: req.body.content,
     }).save();
+    const posts = await PostModel.find();
 
     return res.status(200).json({
       success: true,
-      posts: post,
+      posts: posts,
     });
   } catch (error) {
     return res.status(500).json({
