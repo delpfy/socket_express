@@ -17,6 +17,7 @@ import * as userController from "./Controllers/UserController.js";
 import * as itemController from "./Controllers/ItemController.js";
 import * as basketController from "./Controllers/BasketItemController.js";
 import * as reviewController from "./Controllers/ReviewController.js";
+import * as postController from "./Controllers/PostController.js";
 
 // validationErrorsHandler - in case that field are named wrong or its value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
@@ -196,3 +197,22 @@ app.patch(
 );
 
 // <Basket items CRUD>
+
+
+app.post(
+  "/posts",
+  checkAuthorization,
+  /* checkRole, */
+  validationErrorsHandler,
+  postController.create
+);
+app.get("/posts", postController.getAll);
+app.get("/posts/:id", postController.getOne);
+app.delete("/posts/:id", checkAuthorization, /* checkRole, */ postController.remove);
+app.patch(
+  "/posts/:id",
+  checkAuthorization,
+  /* checkRole, */
+  validationErrorsHandler,
+  postController.update
+);
