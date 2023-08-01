@@ -4,10 +4,10 @@ export const create = async (req, res) => {
   // Trying to create new post and if successful, save it to database.
   try {
     const post = await new PostModel({
-        title: req.body.title,
-        image: req.body.image,
-        description: req.body.description,
-        content: req.body.content,
+      title: req.body.title,
+      image: req.body.image,
+      description: req.body.description,
+      content: req.body.content,
     }).save();
     const posts = await PostModel.find();
 
@@ -64,24 +64,25 @@ export const getOne = async (req, res) => {
   }
 };
 
-
 export const remove = async (req, res) => {
   try {
     // Trying to find post by provided id.
-    await PostModel.findOneAndDelete({
+    const post = await PostModel.findOneAndDelete({
       _id: req.params.id,
-    })
-      .then(() => {
-        res.status(200).json({
-          success: true,
-        });
-      })
-      .catch(() => {
-        res.status(404).json({
-          success: false,
-          error: "Not found",
-        });
+    });
+
+    if (post) {
+      const posts = await PostModel.find();
+      res.status(200).json({
+        success: true,
+        posts: posts,
       });
+    } else {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -89,7 +90,6 @@ export const remove = async (req, res) => {
     });
   }
 };
-
 
 export const update = async (req, res) => {
   try {
