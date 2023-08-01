@@ -94,7 +94,7 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   try {
     // Trying to find post by provided id.
-    await PostModel.findOneAndUpdate(
+    const post = await PostModel.findOneAndUpdate(
       {
         _id: req.params.id,
       },
@@ -105,19 +105,20 @@ export const update = async (req, res) => {
         content: req.body.content,
       },
       { new: true }
-    ).then((doc) => {
-      if (!doc) {
-        res.status(400).json({
-          success: false,
-          error: "post not found",
-        });
-      } else {
-        res.status(200).json({
-          success: true,
-          post: doc,
-        });
-      }
-    });
+    );
+
+    if (post) {
+      const posts = await PostModel.find();
+      res.status(200).json({
+        success: true,
+        posts: posts,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
