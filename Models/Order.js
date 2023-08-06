@@ -1,76 +1,153 @@
 import mongoose from "mongoose";
 
-const OrderSchema = mongoose.Schema(
+const OrderSchema = new mongoose.Schema(
   {
     user_location: {
-      city_location: String,
-      required: true,
+      city_location: {
+        type: String,
+        required: true,
+      },
     },
 
     receiver: {
-      userIsReceiver: Boolean,
-      contact: {
-        name: String,
-        surname: String,
-        email: String,
-        phone: String,
+      userIsReceiver: {
+        type: Boolean,
         required: true,
+      },
+      contact: {
+        name: {
+          type: String,
+          required: true,
+        },
+        surname: {
+          type: String,
+          required: true,
+        },
+        email: {
+          type: String,
+          required: true,
+        },
+        phone: {
+          type: String,
+          required: true,
+        },
       },
     },
 
     user_contact: {
-      name: String,
-      surname: String,
-      email: String,
-      phone: String,
-      required: true,
+      name: {
+        type: String,
+        required: true,
+      },
+      surname: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+      },
     },
 
     delivery: {
-      delivery_type: String,
-      delivery_cost: Number,
-      delivery_location: {
-        street: String,
-        houseNumber: String,
-        apartmentNumber: String,
-        floorNumber: String,
+      delivery_type: {
+        type: String,
+        required: true,
       },
-      novaDepartment: String,
-      liftRequired: Boolean,
-      elevator: Boolean,
-      required: true,
+      delivery_cost: {
+        type: Number,
+        required: true,
+      },
+      delivery_location: {
+        street: {
+          type: String,
+          required: true,
+        },
+        houseNumber: {
+          type: String,
+          required: true,
+        },
+        apartmentNumber: {
+          type: String,
+          required: true,
+        },
+        floorNumber: {
+          type: String,
+          required: true,
+        },
+      },
+      novaDepartment: {
+        type: String,
+      },
+      liftRequired: {
+        type: Boolean,
+      },
+      elevator: {
+        type: Boolean,
+      },
     },
 
     payment: {
-      payment_type: String,
-      uponReceipt: Boolean,
-      card: {
-        Number: String,
-        date: String,
-        cvv: String,
+      payment_type: {
+        type: String,
+        required: true,
       },
-      required: true,
+      uponReceipt: {
+        type: Boolean,
+        required: true,
+      },
+      card: {
+        number: {
+          type: String,
+        },
+        date: {
+          type: String,
+        },
+        cvv: {
+          type: String,
+        },
+      },
     },
 
     payWithParts: {
-      months: Number,
-      perMonth: Number,
-      firstPay: Number,
-      required: true,
+      months: {
+        type: Number,
+        required: true,
+      },
+      perMonth: {
+        type: Number,
+        required: true,
+      },
+      firstPay: {
+        type: Number,
+        required: true,
+      },
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Определите модель, на которую ссылается
+      required: true,
     },
 
     items: [
       {
+        // Вам, вероятно, нужно определить структуру для элементов в массиве
+        type: mongoose.Schema.Types.Mixed,
         required: true,
       },
     ],
-    total: Number,
-    numberOfOrder: String,
+    total: {
+      type: Number,
+      required: true,
+    },
+    numberOfOrder: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
