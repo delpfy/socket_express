@@ -2,6 +2,19 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    items: [
+      {
+        type: mongoose.Schema.Types.Mixed,
+        required: true,
+      },
+    ],
+
     user_location: {
       city_location: {
         type: String,
@@ -106,18 +119,7 @@ const OrderSchema = new mongoose.Schema(
         type: Number,
       },
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
 
-    items: [
-      {
-        type: mongoose.Schema.Types.Mixed,
-        required: true,
-      },
-    ],
     total: {
       type: Number,
       required: true,
