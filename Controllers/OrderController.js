@@ -124,16 +124,16 @@ export const getOne = async (req, res) => {
 export const getByUser = async (req, res) => {
   try {
     // Trying to find order by provided id.
-    const order = await OrderModel.find({ user: { $eq: req.params.id } });
+    const orders = await OrderModel.find({ user: { $eq: req.params.id } });
 
-    if (!order) {
+    if (!orders) {
       res.status(404).json({
         success: false,
         error: "Not found",
       });
     } else {
       res.status(200).json({
-        order,
+        orders,
       });
     }
   } catch (error) {
