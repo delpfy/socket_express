@@ -18,6 +18,7 @@ import * as itemController from "./Controllers/ItemController.js";
 import * as basketController from "./Controllers/BasketItemController.js";
 import * as reviewController from "./Controllers/ReviewController.js";
 import * as postController from "./Controllers/PostController.js";
+import * as orderController from "./Controllers/OrderController.js";
 
 // validationErrorsHandler - in case that field are named wrong or its value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
@@ -198,7 +199,7 @@ app.patch(
 
 // <Basket items CRUD>
 
-
+// <Posts CRUD>
 app.post(
   "/posts",
   checkAuthorization,
@@ -216,3 +217,20 @@ app.patch(
   validationErrorsHandler,
   postController.update
 );
+// </Posts CRUD>
+
+
+// <Orders CRUD>
+app.post(
+  "/orders",
+  checkAuthorization,
+  /* checkRole, */
+  validationErrorsHandler,
+  orderController.create
+);
+app.get("/orders", orderController.getAll);
+app.get("/orders/:id", orderController.getOne);
+app.get("/orders/user/:id", orderController.getByUser);
+app.delete("/orders/:id", checkAuthorization, /* checkRole, */ orderController.remove);
+
+// </Orders CRUD>

@@ -13,6 +13,7 @@ export const create = async (req, res) => {
       items: req.body.items,
       total: req.body.total,
       numberOfOrder: req.body.numberOfOrder,
+      user: req.userId,
     }).save();
 
     const orders = await OrderModel.find();
@@ -72,7 +73,7 @@ export const getOne = async (req, res) => {
 export const getByUser = async (req, res) => {
   try {
     // Trying to find order by provided id.
-    const order = await OrderModel.findById(req.userId);
+    const order = await OrderModel.find({ user: { $eq: req.params.id } });
 
     if (!order) {
       res.status(404).json({
@@ -136,6 +137,7 @@ export const update = async (req, res) => {
         items: req.body.items,
         total: req.body.total,
         numberOfOrder: req.body.numberOfOrder,
+        user: req.userId,
       },
       { new: true }
     );
