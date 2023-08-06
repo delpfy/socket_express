@@ -5,31 +5,25 @@ const OrderSchema = new mongoose.Schema(
     user_location: {
       city_location: {
         type: String,
-        required: true,
       },
     },
 
     receiver: {
       userIsReceiver: {
         type: Boolean,
-        required: true,
       },
       contact: {
         name: {
           type: String,
-          required: true,
         },
         surname: {
           type: String,
-          required: true,
         },
         email: {
           type: String,
-          required: true,
         },
         phone: {
           type: String,
-          required: true,
         },
       },
     },
@@ -37,47 +31,37 @@ const OrderSchema = new mongoose.Schema(
     user_contact: {
       name: {
         type: String,
-        required: true,
       },
       surname: {
         type: String,
-        required: true,
       },
       email: {
         type: String,
-        required: true,
       },
       phone: {
         type: String,
-        required: true,
       },
     },
 
     delivery: {
       delivery_type: {
         type: String,
-        required: true,
       },
       delivery_cost: {
         type: Number,
-        required: true,
       },
       delivery_location: {
         street: {
           type: String,
-          required: true,
         },
         houseNumber: {
           type: String,
-          required: true,
         },
         apartmentNumber: {
           type: String,
-          required: true,
         },
         floorNumber: {
           type: String,
-          required: true,
         },
       },
       novaDepartment: {
@@ -94,11 +78,9 @@ const OrderSchema = new mongoose.Schema(
     payment: {
       payment_type: {
         type: String,
-        required: true,
       },
       uponReceipt: {
         type: Boolean,
-        required: true,
       },
       card: {
         number: {
@@ -116,26 +98,22 @@ const OrderSchema = new mongoose.Schema(
     payWithParts: {
       months: {
         type: Number,
-        required: true,
       },
       perMonth: {
         type: Number,
-        required: true,
       },
       firstPay: {
         type: Number,
-        required: true,
       },
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Определите модель, на которую ссылается
+      ref: "User",
       required: true,
     },
 
     items: [
       {
-        // Вам, вероятно, нужно определить структуру для элементов в массиве
         type: mongoose.Schema.Types.Mixed,
         required: true,
       },
