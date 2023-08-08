@@ -150,12 +150,13 @@ export const update = async (req, res) => {
       {
         _id: req.params.id,
       },
+      { $inc: { quantity: req.body.quantity } },
       {
         name: req.body.name,
         description: req.body.description,
         category: req.body.category,
         sale: req.body.sale,
-        quantity: req.body.quantity,
+        
         price: req.body.price,
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
