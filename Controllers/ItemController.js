@@ -158,7 +158,7 @@ export const update = async (req, res) => {
         image: req.body.image,
       },
       { new: true }
-    ).save();
+    );
 
     if (!item) {
       res.status(400).json({
