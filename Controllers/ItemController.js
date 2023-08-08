@@ -118,25 +118,20 @@ export const remove = async (req, res) => {
 
 export const searchItem = async (req, res) => {
   try {
-
     const items = await ItemModel.find({
-      "$or": [
-        {name: {$regex: req.params.name, $options: "i"}}
-      ]
-       
-      });
-    if(items){
+      $or: [{ name: { $regex: req.params.name, $options: "i" } }],
+    });
+    if (items) {
       res.status(200).json({
         success: true,
         items: items,
       });
+    } else {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
     }
-   else{
-    res.status(404).json({
-      success: false,
-      error: "Not found",
-    });
-   }
   } catch (error) {
     console.error("Error searching items:", error);
     res.status(500).json({ error: "Error searching items" });
@@ -146,7 +141,7 @@ export const searchItem = async (req, res) => {
 export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
-    await ItemModel.findOneAndUpdate(
+    const item = await ItemModel.findOneAndUpdate(
       {
         _id: req.params.id,
       },
@@ -156,26 +151,26 @@ export const update = async (req, res) => {
         description: req.body.description,
         category: req.body.category,
         sale: req.body.sale,
-        
+
         price: req.body.price,
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
       },
       { new: true }
-    ).then((doc) => {
-      if (!doc) {
-        res.status(400).json({
-          success: false,
-          error: "Item not found",
-        });
-      } else {
-        res.status(200).json({
-          success: true,
-          item: doc,
-        });
-      }
-    });
+    ).save();
+
+    if (!item) {
+      res.status(400).json({
+        success: false,
+        error: "Item not found",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        item: item,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
