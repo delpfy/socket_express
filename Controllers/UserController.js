@@ -233,6 +233,7 @@ export const resetPassword = async (req, res) => {
       res.status(200).json({
         success: true,
         token: resetToken,
+        user: user
       });
     } else {
       res.status(400).json({
