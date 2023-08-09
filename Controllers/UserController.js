@@ -165,7 +165,7 @@ export const uploadFile = (req, res) => {
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
 
-  const user = await UserModel.find({ email: { $eq: email } });
+  const user = await UserModel.findOne({ email: { $eq: email } });
 
   if(user){
     const salt = await bcrypt.genSalt(5);
@@ -233,7 +233,7 @@ export const resetPassword = async (req, res) => {
       res.status(200).json({
         success: true,
         token: resetToken,
-        user: user
+        
       });
     } else {
       res.status(400).json({
