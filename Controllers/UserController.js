@@ -164,76 +164,87 @@ export const uploadFile = (req, res) => {
 
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
-  const salt = await bcrypt.genSalt(5);
 
-  const resetToken = await bcrypt.hash(email, salt);
+  const user = await ItemModel.find({ email: { $eq: email } });
 
-  let testEmailAccount = await nodemailer.createTestAccount();
+  if(user){
+    const salt = await bcrypt.genSalt(5);
 
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_KEY,
-      pass: process.env.PASS_KEY,
-    },
-  });
-
-  let result = await transporter.sendMail({
-    from: '"Сокет" <nodejs@example.com>',
-    to: email,
-    subject: "Відновлення пароля",
-    text: `Ваш код для відновлення пароля: ${resetToken.slice(2, 8)}`,
-    html: `
-    <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-          }
-          h2 {
-            color: #333;
-          }
-          p {
-            color: #555;
-          }
-          .code {
-            font-size: 24px;
-            color: #007bff;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>Відновлення пароля</h2>
-          <p>Для відновлення пароля вам потрібно ввести наступний код:</p>
-          <p class="code">${resetToken.slice(2, 8)}</p>
-        </div>
-      </body>
-    </html>
-  `,
-  });
-  if (result.accepted) {
-    res.status(200).json({
-      success: true,
-      token: resetToken,
+    const resetToken = await bcrypt.hash(email, salt);
+  
+    let testEmailAccount = await nodemailer.createTestAccount();
+  
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_KEY,
+        pass: process.env.PASS_KEY,
+      },
     });
-  } else {
+  
+    let result = await transporter.sendMail({
+      from: '"Сокет" <nodejs@example.com>',
+      to: email,
+      subject: "Відновлення пароля",
+      text: `Ваш код для відновлення пароля: ${resetToken.slice(2, 8)}`,
+      html: `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f4f4f4;
+              margin: 0;
+              padding: 0;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              border-radius: 5px;
+              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+              color: #333;
+            }
+            p {
+              color: #555;
+            }
+            .code {
+              font-size: 24px;
+              color: #007bff;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h2>Відновлення пароля</h2>
+            <p>Для відновлення пароля вам потрібно ввести наступний код:</p>
+            <p class="code">${resetToken.slice(2, 8)}</p>
+          </div>
+        </body>
+      </html>
+    `,
+    });
+    if (result.accepted) {
+      res.status(200).json({
+        success: true,
+        token: resetToken,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+      });
+    }
+    console.log(result);
+  }
+  else{
     res.status(400).json({
       success: false,
     });
   }
-  console.log(result);
+  
 };
