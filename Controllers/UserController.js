@@ -166,7 +166,7 @@ export const resetPassword = async (req, res) => {
   const { email } = req.body;
   const salt = await bcrypt.genSalt(5);
 
-  const resetToken = await bcrypt.hash(req.userId, salt);
+  const resetToken = await bcrypt.hash(email, salt);
 
   let testEmailAccount = await nodemailer.createTestAccount();
 
