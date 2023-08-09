@@ -76,7 +76,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
-
+app.post('/reset-password', checkAuthorization, userController.resetPassword)
 app.post(
   "/authorize",
   authorizationValidator,
