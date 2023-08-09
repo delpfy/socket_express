@@ -149,6 +149,31 @@ export const update = async (req, res) => {
   }
 };
 
+
+export const updatePassword = async (req, res) => {
+  const salt = await bcrypt.genSalt(10);
+  try {
+    // Trying to find item by provided id.
+    await UserModel.updateOne(
+      {
+        email: req.body.email,
+      },
+      {
+        passwordHash: await bcrypt.hash(req.body.password, salt),
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
 export const uploadFile = (req, res) => {
   try {
     res.status(200).json({
