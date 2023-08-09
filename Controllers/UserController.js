@@ -165,7 +165,7 @@ export const uploadFile = (req, res) => {
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
 
-  const user = await ItemModel.find({ email: { $eq: email } });
+  const user = await UserModel.find({ email: { $eq: email } });
 
   if(user){
     const salt = await bcrypt.genSalt(5);
