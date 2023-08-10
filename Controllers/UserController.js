@@ -246,8 +246,7 @@ export const resetPassword = async (req, res) => {
         </head>
         <body>
           <div class="container">
-            <h2>Відновлення пароля</h2>
-            <p>Для відновлення пароля вам потрібно ввести наступний код:</p>
+            <h2>Для відновлення пароля вам потрібно ввести наступний код:</h2>
             <p class="code">${resetToken.slice(2, 8)}</p>
           </div>
         </body>
