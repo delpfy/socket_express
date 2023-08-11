@@ -220,11 +220,19 @@ export const authorizationStatus = async (req, res) => {
         error: "Not found",
       });
     }
-
-    return res.status(200).json({
-      success: true,
-      user: user,
-    });
+    if(user.emailConfirmed){
+      return res.status(200).json({
+        success: true,
+        user: user,
+      });
+    }
+    else{
+      return res.status(403).json({
+        success: false,
+        error: "Email not confirmed",
+      });
+    }
+    
   } catch (error) {
     return res.status(403).json({
       success: false,
