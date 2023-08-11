@@ -60,7 +60,7 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
         <div class="container">
           <h2>Вітаємо у Сокет!</h2>
           <p>Привіт, це перевірка на те, що введена тобою пошта існує. Натисніть на кнопку нижче, щоб підтвердити свою адресу:</p>
-          <a class="button" href="${`http://localhost:3000/confirm-email?token=${emailConfirmationToken}`}">Підтвердити адресу</a>
+          <a class="button" href="${`http://localhost:3000/confirm-email`}">Підтвердити адресу</a>
         </div>
       </body>
     </html>
