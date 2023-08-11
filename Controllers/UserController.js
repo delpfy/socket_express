@@ -15,36 +15,108 @@ export const checkEmailExistence = async (email) => {
       pass: process.env.PASS_KEY,
     },
   });
-
-  const result = await transporter.sendMail({
-    from: '"Сокет" <nodejs@example.com>',
-    to: email,
-    subject: "Вітаємо у Сокет!",
-    text: "Привіт, це перевірка на те, що введена тобою пошта існує",
-  });
-
-  if (result.accepted) {
+  try {
+    const result = await transporter.sendMail({
+      from: '"Сокет" <nodejs@example.com>',
+      to: email,
+      subject: "Вітаємо у Сокет!",
+      text: "Привіт, це перевірка на те, що введена тобою пошта існує",
+      html: `
+    <html>
+      <head>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+          }
+          h2 {
+            color: #333;
+          }
+          p {
+            color: #555;
+          }
+          .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h2>Вітаємо у Сокет!</h2>
+          <p>Привіт, це перевірка на те, що введена тобою пошта існує. Натисніть на кнопку нижче, щоб підтвердити свою адресу:</p>
+          <a class="button" href="${"http://localhost:3000/confirm-email"}">Підтвердити адресу</a>
+        </div>
+      </body>
+    </html>
+  `,
+    });
+    console.log(result.response);
     return true;
-  } else {
+  } catch (error) {
     return false;
   }
- 
 };
-  
 
+export const confirmEmail = async (req, res) => {
+  const { token } = req.query;
 
-export const registration = async (req, res) => {
-  const canSendEmail = await checkEmailExistence(req.body.email);
-
-  if (!canSendEmail) {
+  if (!token) {
     return res.status(400).json({
       success: false,
-      error: "Такої пошти не існує",
+      error: "Token is missing",
     });
   }
+
+  try {
+    const user = await UserModel.findOneAndUpdate(
+      { emailConfirmationToken: token },
+      { $unset: { emailConfirmationToken: 1 }, $set: { emailConfirmed: true } },
+      { new: true }
+    );
+
+    if (user) {
+      return res.status(200).json({
+        success: true,
+        message: "Email confirmed successfully",
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid token",
+      });
+    }
+  } catch (error) {
+    console.error("Email confirmation error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Email confirmation failed",
+    });
+  }
+};
+
+export const registration = async (req, res) => {
+  
   // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
-
+  const emailConfirmationToken = await bcrypt.hash(req.body.email, salt);
+  
+  await checkEmailExistence(req.body.email);
   // Creating new user and saving it to database.
   try {
     const user = await new UserModel({
@@ -54,6 +126,7 @@ export const registration = async (req, res) => {
       passwordHash: await bcrypt.hash(req.body.password, salt),
       role: req.body.role,
       avatarUrl: req.body.avatar,
+      emailConfirmationToken: emailConfirmationToken,
     }).save();
 
     // If successful, generate token, in future it will be decrypted.
@@ -73,6 +146,7 @@ export const registration = async (req, res) => {
     return res.status(200).json({
       success: true,
       token: token,
+      emailConfirmationToken: emailConfirmationToken,
     });
   } catch (error) {
     console.log("REGISTER ERROR \n" + error);

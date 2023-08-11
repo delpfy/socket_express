@@ -31,6 +31,9 @@ const UserSchema = mongoose.Schema(
     avatarUrl: {
       type: String,
     },
+    emailConfirmationToken: {
+      type: String,
+    }
   },
   {
     timestamps: true,
