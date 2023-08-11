@@ -4,7 +4,48 @@ import nodemailer from "nodemailer";
 import mailgun from "nodemailer-mailgun-transport";
 import UserModel from "../Models/User.js";
 
+export const checkEmailExistence = async (email) => {
+  let testEmailAccount = await nodemailer.createTestAccount();
+
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_KEY,
+      pass: process.env.PASS_KEY,
+    },
+  });
+
+  const result = await transporter.sendMail({
+    from: '"Сокет" <nodejs@example.com>',
+    to: email,
+    subject: "Вітаємо у Сокет!",
+    text: "Привіт, це перевірка на те, що введена тобою пошта існує",
+  });
+
+  if (result.accepted) {
+    res.status(200).json({
+      success: true,
+      token: resetToken,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+    });
+  }
+  console.log(result);
+};
+
 export const registration = async (req, res) => {
+  const canSendEmail = await checkEmailExistence(req.body.email);
+
+  if (!canSendEmail) {
+    return res.status(400).json({
+      success: false,
+      error: "Такої пошти не існує",
+    });
+  }
   // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
 
@@ -149,7 +190,6 @@ export const update = async (req, res) => {
   }
 };
 
-
 export const updatePassword = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   try {
@@ -192,13 +232,13 @@ export const resetPassword = async (req, res) => {
 
   const user = await UserModel.findOne({ email: { $eq: email } });
 
-  if(user){
+  if (user) {
     const salt = await bcrypt.genSalt(5);
 
     const resetToken = await bcrypt.hash(email, salt);
-  
+
     let testEmailAccount = await nodemailer.createTestAccount();
-  
+
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -208,7 +248,7 @@ export const resetPassword = async (req, res) => {
         pass: process.env.PASS_KEY,
       },
     });
-  
+
     let result = await transporter.sendMail({
       from: '"Сокет" <nodejs@example.com>',
       to: email,
@@ -257,7 +297,6 @@ export const resetPassword = async (req, res) => {
       res.status(200).json({
         success: true,
         token: resetToken,
-        
       });
     } else {
       res.status(400).json({
@@ -265,11 +304,9 @@ export const resetPassword = async (req, res) => {
       });
     }
     console.log(result);
-  }
-  else{
+  } else {
     res.status(400).json({
       success: false,
     });
   }
-  
 };
