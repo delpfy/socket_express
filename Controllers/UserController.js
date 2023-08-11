@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
-import mailgun from "nodemailer-mailgun-transport";
 import UserModel from "../Models/User.js";
 
 export const checkEmailExistence = async (email) => {
@@ -25,17 +24,14 @@ export const checkEmailExistence = async (email) => {
   });
 
   if (result.accepted) {
-    res.status(200).json({
-      success: true,
-      token: resetToken,
-    });
+    return true;
   } else {
-    res.status(400).json({
-      success: false,
-    });
+    return false;
   }
-  console.log(result);
+ 
 };
+  
+
 
 export const registration = async (req, res) => {
   const canSendEmail = await checkEmailExistence(req.body.email);
