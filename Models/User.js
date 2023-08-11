@@ -33,6 +33,9 @@ const UserSchema = mongoose.Schema(
     },
     emailConfirmationToken: {
       type: String,
+    },
+    emailConfirmed: {
+      type: Boolean,
     }
   },
   {

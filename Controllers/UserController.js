@@ -127,6 +127,7 @@ export const registration = async (req, res) => {
       role: req.body.role,
       avatarUrl: req.body.avatar,
       emailConfirmationToken: emailConfirmationToken,
+      emailConfirmed: false
     }).save();
 
     // If successful, generate token, in future it will be decrypted.
