@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import UserModel from "../Models/User.js";
 
-export const checkEmailExistence = async (email) => {
+export const checkEmailExistence = async (email, emailConfirmationToken) => {
   let testEmailAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({
@@ -60,7 +60,7 @@ export const checkEmailExistence = async (email) => {
         <div class="container">
           <h2>Вітаємо у Сокет!</h2>
           <p>Привіт, це перевірка на те, що введена тобою пошта існує. Натисніть на кнопку нижче, щоб підтвердити свою адресу:</p>
-          <a class="button" href="${"http://localhost:3000/confirm-email"}">Підтвердити адресу</a>
+          <a class="button" href="${`http://localhost:3000/confirm-email?token=${emailConfirmationToken}`}">Підтвердити адресу</a>
         </div>
       </body>
     </html>
@@ -116,7 +116,7 @@ export const registration = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const emailConfirmationToken = await bcrypt.hash(req.body.email, salt);
   
-  await checkEmailExistence(req.body.email);
+  await checkEmailExistence(req.body.email, emailConfirmationToken);
   // Creating new user and saving it to database.
   try {
     const user = await new UserModel({
