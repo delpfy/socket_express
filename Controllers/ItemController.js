@@ -261,17 +261,18 @@ export const searchItem = async (req, res) => {
 export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
+    
+    req.body.reviewsAmount
     const item = await ItemModel.findOneAndUpdate(
       {
         _id: req.params.id,
       },
-      { $inc: { quantity: req.body.quantity ? req.body.quantity : 0 } },
       {
+        $inc: { quantity: req.body.quantity ? req.body.quantity : 0 },
         name: req.body.name,
         description: req.body.description,
         category: req.body.category,
         sale: req.body.sale,
-
         price: req.body.price,
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
