@@ -151,7 +151,6 @@ app.patch(
 app.post(
   "/items",
   checkAuthorization,
-  
   addingItemValidator,
   validationErrorsHandler,
   itemController.create
