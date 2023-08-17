@@ -289,7 +289,7 @@ export const update = async (req, res) => {
     } else {
       res.status(200).json({
         success: true,
-        item: item,
+        items: item,
       });
     }
   } catch (error) {
