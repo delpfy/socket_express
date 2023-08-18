@@ -7,6 +7,7 @@ export const create = async (req, res) => {
     switch (req.body.category) {
       case "Ноутбуки":
         const item = await Laptop.create({
+          user: req.userId,
           name: req.body.name,
           description: req.body.description,
           category: req.body.category,
@@ -62,6 +63,7 @@ export const create = async (req, res) => {
 
       case "Монітори":
         const monitor = await Monitor.create({
+          user: req.userId,
           name: req.body.name,
           description: req.body.description,
           category: req.body.category,
@@ -94,6 +96,7 @@ export const create = async (req, res) => {
        
       case "Планшети":
         const tablet = await Tablet.create({
+          user: req.userId,
           name: req.body.name,
           description: req.body.description,
           category: req.body.category,
@@ -262,7 +265,7 @@ export const update = async (req, res) => {
   try {
     // Trying to find item by provided id.
     
-    req.body.reviewsAmount
+    
     const item = await ItemModel.findOneAndUpdate(
       {
         _id: req.params.id,
