@@ -32,7 +32,7 @@ export default Item.discriminator(
           required: true,
         },
         screenDiagonal: {
-          type: Number,
+          type: String,
           required: true,
         },
         matrixType: {
@@ -52,11 +52,11 @@ export default Item.discriminator(
           required: true,
         },
         refreshRate: {
-          type: Number,
+          type: String,
           required: true,
         },
         brightness: {
-          type: Number,
+          type: String,
           required: true,
         },
         otherDisplayFeatures: {
