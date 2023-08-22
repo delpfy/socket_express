@@ -11,7 +11,7 @@ export default Item.discriminator(
           type: String,
           required: true,
         },
-        memory: {
+        RAM: {
           type: String,
           required: true,
         },
