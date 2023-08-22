@@ -19,7 +19,7 @@ export const create = async (req, res) => {
           image: req.body.image,
           fields: {
             processor: req.body.processor,
-            memory: req.body.memory,
+            RAM: req.body.RAM,
             brand: req.body.brand,
             series: req.body.series,
             construction: req.body.construction,
