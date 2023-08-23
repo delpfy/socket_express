@@ -5,14 +5,14 @@ import UserModel from "../Models/User.js";
 
 export const checkEmailExistence = async (email, emailConfirmationToken) => {
   let testEmailAccount = await nodemailer.createTestAccount();
-
+  
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_KEY,
-      pass: process.env.PASS_KEY,
+      user: process.env.EMAIL_KEY ,
+      pass: process.env.PASS_KEY ,
     },
   });
   try {
@@ -86,6 +86,7 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
     console.log(result.response);
     return true;
   } catch (error) {
+    console.log(error.message);
     return false;
   }
 };
@@ -132,8 +133,13 @@ export const registration = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const emailConfirmationToken = await bcrypt.hash(req.body.email, salt);
 
-  await checkEmailExistence(req.body.email, emailConfirmationToken);
-  // Creating new user and saving it to database.
+  
+  if(!await checkEmailExistence(req.body.email, emailConfirmationToken)){
+    return res.status(400).json({
+      success: false,
+      error: "Registration failed",
+    });
+  }
   try {
     const user = await new UserModel({
       fullName: req.body.fullName,
