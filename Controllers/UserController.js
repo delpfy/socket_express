@@ -45,25 +45,39 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
           p {
             color: #555;
           }
-          .button {
+          
+          a {
             display: inline-block;
-            margin-top: 20px;
             padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
+            text-align: center;
             text-decoration: none;
+            border: none;
             border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #4CAF50; 
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
           }
-          .button:hover {
-            background-color: #0056b3;
+
+          a:hover {
+            background-color: #45a049; 
+            transform: scale(1.05); 
           }
+
+          a:active {
+            background-color: #3e8940; 
+            transform: scale(0.95); 
+          }
+
         </style>
       </head>
       <body>
         <div class="container">
           <h2>Вітаємо у Сокет!</h2>
           <p>Привіт, це перевірка на те, що введена тобою пошта існує. Натисніть на кнопку нижче, щоб підтвердити свою адресу:</p>
-          <a class="button" href="${`https://socketapp.vercel.app/confirm-email/${emailConfirmationToken}`}">Підтвердити адресу</a>
+          <a href="${`https://socketapp.vercel.app/confirm-email/${emailConfirmationToken}`}">Підтвердити адресу</a>
         </div>
       </body>
       </html>
@@ -114,11 +128,10 @@ export const confirmEmail = async (req, res) => {
 };
 
 export const registration = async (req, res) => {
-  
   // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
   const emailConfirmationToken = await bcrypt.hash(req.body.email, salt);
-  
+
   await checkEmailExistence(req.body.email, emailConfirmationToken);
   // Creating new user and saving it to database.
   try {
@@ -130,7 +143,7 @@ export const registration = async (req, res) => {
       role: req.body.role,
       avatarUrl: req.body.avatar,
       emailConfirmationToken: emailConfirmationToken,
-      emailConfirmed: false
+      emailConfirmed: false,
     }).save();
 
     // If successful, generate token, in future it will be decrypted.
@@ -223,19 +236,17 @@ export const authorizationStatus = async (req, res) => {
         error: "Not found",
       });
     }
-    if(user.emailConfirmed){
+    if (user.emailConfirmed) {
       return res.status(200).json({
         success: true,
         user: user,
       });
-    }
-    else{
+    } else {
       return res.status(403).json({
         success: false,
         error: "Email not confirmed",
       });
     }
-    
   } catch (error) {
     return res.status(403).json({
       success: false,
