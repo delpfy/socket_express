@@ -219,6 +219,7 @@ export const remove = async (req, res) => {
 
     await ItemModel.findOneAndDelete({
       _id: req.params.id,
+      user: req.userId
     })
       .then((doc) => {
         if (doc.user !== undefined) {
