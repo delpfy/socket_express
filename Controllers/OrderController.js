@@ -17,7 +17,7 @@ export const create = async (req, res) => {
 
     const order = await new OrderModel({
       user_location: {
-        city_location: user_location?.city_location || "", // Проверяем наличие поля user_location и city_location
+        city_location: user_location?.city_location || "", 
       },
       receiver: {
         userIsReceiver: receiver?.userIsReceiver || false,

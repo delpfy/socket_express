@@ -166,6 +166,13 @@ app.patch(
   validationErrorsHandler,
   itemController.update
 );
+app.patch(
+  "/items/update/:id",
+  checkAuthorization,
+  validationErrorsHandler,
+  itemController.updateItemFields
+);
+
 
 // </Items CRUD>
 

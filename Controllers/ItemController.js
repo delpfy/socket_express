@@ -261,9 +261,10 @@ export const searchItem = async (req, res) => {
   }
 };
 
-export const update = async (req, res) => {
+export const updateItemFields = async (req, res) => {
   try {
     // Trying to find item by provided id.
+    console.log(req.body.category)
     switch (req.body.category) {
       case "Ноутбуки":
         const laptop = await Laptop.findOneAndUpdate(
@@ -275,7 +276,7 @@ export const update = async (req, res) => {
           description: req.body.description,
           category: req.body.category,
           sale: req.body.sale,
-          $inc: { quantity: req.body.quantity ? req.body.quantity : 0 },
+          quantity: req.body.quantity,
           price: req.body.price,
           rating: req.body.rating,
           reviewsAmount: req.body.reviewsAmount,
@@ -322,17 +323,12 @@ export const update = async (req, res) => {
         { new: true }
         
         );
-        if (!laptop) {
-          res.status(400).json({
-            success: false,
-            error: "Item not found",
-          });
-        } else {
+        if (laptop) {
           res.status(200).json({
             success: true,
             items: laptop,
           });
-        }
+        } 
 
       case "Монітори":
         const monitor = await Monitor.findOneAndUpdate(
@@ -344,7 +340,7 @@ export const update = async (req, res) => {
           description: req.body.description,
           category: req.body.category,
           sale: req.body.sale,
-          $inc: { quantity: req.body.quantity ? req.body.quantity : 0 },
+          quantity: req.body.quantity,
           price: req.body.price,
           rating: req.body.rating,
           reviewsAmount: req.body.reviewsAmount,
@@ -367,17 +363,12 @@ export const update = async (req, res) => {
         },
         { new: true }
         );
-        if (!monitor) {
-          res.status(400).json({
-            success: false,
-            error: "Item not found",
-          });
-        } else {
+        if (monitor) {
           res.status(200).json({
             success: true,
             items: monitor,
           });
-        }
+        } 
        
       case "Планшети":
         const tablet = await Tablet.findOneAndUpdate(
@@ -389,7 +380,7 @@ export const update = async (req, res) => {
           description: req.body.description,
           category: req.body.category,
           sale: req.body.sale,
-          $inc: { quantity: req.body.quantity ? req.body.quantity : 0 },
+          quantity: req.body.quantity,
           price: req.body.price,
           rating: req.body.rating,
           reviewsAmount: req.body.reviewsAmount,
@@ -427,25 +418,61 @@ export const update = async (req, res) => {
         { new: true }
         );
 
-        if (!tablet) {
-          res.status(400).json({
-            success: false,
-            error: "Item not found",
-          });
-        } else {
+        if (tablet) {
           res.status(200).json({
             success: true,
             items: tablet,
           });
-        }
+        } 
 
     }
     
     
+
   } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: "Item not found",
+    });
+  }
+};
+
+
+export const update = async (req, res) => {
+  try {
+    const item = await ItemModel.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      {
+        $inc: { quantity: req.body.quantity ? req.body.quantity : 0 },
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category,
+        sale: req.body.sale,
+        price: req.body.price,
+        rating: req.body.rating,
+        reviewsAmount: req.body.reviewsAmount,
+        image: req.body.image,
+      },
+      { new: true }
+    );
+
+    if (!item) {
+      res.status(400).json({
+        success: false,
+        error: "Item not found",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        items: item,
+      });
+    }
+  }catch(error) {
     res.status(500).json({
       success: false,
       error: error,
     });
   }
-};
+}
