@@ -94,7 +94,7 @@ export default Item.discriminator(
         required: true,
       },
       externalPorts: {
-        type: String,
+        type: [String],
         required: true,
       },
       weight: {
