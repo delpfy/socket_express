@@ -271,7 +271,6 @@ export const update = async (req, res) => {
             _id: req.params.id,
           },
           {
-          user: req.userId,
           name: req.body.name,
           description: req.body.description,
           category: req.body.category,
@@ -341,7 +340,6 @@ export const update = async (req, res) => {
             _id: req.params.id,
           },
           {
-          user: req.userId,
           name: req.body.name,
           description: req.body.description,
           category: req.body.category,
@@ -387,7 +385,6 @@ export const update = async (req, res) => {
             _id: req.params.id,
           },
           {
-          user: req.userId,
           name: req.body.name,
           description: req.body.description,
           category: req.body.category,
@@ -429,6 +426,7 @@ export const update = async (req, res) => {
         },
         { new: true }
         );
+
         if (!tablet) {
           res.status(400).json({
             success: false,
