@@ -22,7 +22,7 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
       subject: "Вітаємо у Сокет!",
       text: "Привіт, це перевірка на те, що введена тобою пошта існує",
       html: `
-    <html>
+      <html>
       <head>
         <style>
           body {
@@ -54,16 +54,19 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
             text-decoration: none;
             border-radius: 5px;
           }
+          .button:hover {
+            background-color: #0056b3;
+          }
         </style>
       </head>
       <body>
         <div class="container">
           <h2>Вітаємо у Сокет!</h2>
           <p>Привіт, це перевірка на те, що введена тобою пошта існує. Натисніть на кнопку нижче, щоб підтвердити свою адресу:</p>
-          <a class="button" style = {{color: #fff}} href="${`https://socketapp.vercel.app/confirm-email/${emailConfirmationToken}`}">Підтвердити адресу</a>
+          <a class="button" href="${`https://socketapp.vercel.app/confirm-email/${emailConfirmationToken}`}">Підтвердити адресу</a>
         </div>
       </body>
-    </html>
+      </html>
   `,
     });
     console.log(result.response);
