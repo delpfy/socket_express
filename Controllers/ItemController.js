@@ -432,7 +432,7 @@ export const updateItemFields = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       success: false,
-      error: "Item not found",
+      error: error.message,
     });
   }
 };
