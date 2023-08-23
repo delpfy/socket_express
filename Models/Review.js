@@ -37,11 +37,11 @@ const ReviewSchema = mongoose.Schema(
         },
         createdAt: {
           type: Date,
-          default: Date.now.toString(), 
+          default: Date.now, 
         },
         updatedAt: {
           type: Date,
-          default: Date.now.toString(), 
+          default: Date.now, 
         },
       },
       
