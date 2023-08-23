@@ -114,6 +114,7 @@ export const updateItemReview = async (req, res) => {
     await ReviewModel.findOneAndUpdate(
       {
         _id: req.params.reviewId,
+        user: req.userId
       },
       {
         description: req.body.description,
@@ -153,6 +154,9 @@ export const updateAllUserReviews = async (req, res) => {
       },
       {
         userName: req.body.userName,
+      },
+      {
+        timestamps: false 
       }
     );
 

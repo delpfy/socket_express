@@ -221,7 +221,7 @@ export const remove = async (req, res) => {
       _id: req.params.id,
     })
       .then((doc) => {
-        if (doc._user !== undefined) {
+        if (doc.user !== undefined) {
           res.status(200).json({
             success: true,
           });
@@ -263,7 +263,6 @@ export const searchItem = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error searching items:", error);
     res.status(500).json({ error: "Error searching items" });
   }
 };
@@ -274,9 +273,10 @@ export const updateItemFields = async (req, res) => {
     console.log(req.body.category);
     switch (req.body.category) {
       case "Ноутбуки":
-        const laptop = await Laptop.findOneAndUpdate(
+        await Laptop.findOneAndUpdate(
           {
             _id: req.params.id,
+            user: req.userId,
           },
           {
             name: req.body.name,
@@ -328,16 +328,24 @@ export const updateItemFields = async (req, res) => {
             },
           },
           { new: true }
-        );
-        if (laptop) {
-          res.status(200).json({
-            success: true,
-            items: laptop,
-          });
-        }
+        ).then((doc) => {
+          if (doc) {
+            if (doc.user !== undefined) {
+              res.status(200).json({
+                success: true,
+                items: doc,
+              });
+            } else {
+              res.status(400).json({
+                success: false,
+                error: "Non user items can`t be edited",
+              });
+            }
+          }
+        });
 
       case "Монітори":
-        const monitor = await Monitor.findOneAndUpdate(
+        await Monitor.findOneAndUpdate(
           {
             _id: req.params.id,
           },
@@ -368,16 +376,24 @@ export const updateItemFields = async (req, res) => {
             },
           },
           { new: true }
-        );
-        if (monitor) {
-          res.status(200).json({
-            success: true,
-            items: monitor,
-          });
-        }
+        ).then((doc) => {
+          if (doc) {
+            if (doc.user !== undefined) {
+              res.status(200).json({
+                success: true,
+                items: doc,
+              });
+            } else {
+              res.status(400).json({
+                success: false,
+                error: "Non user items can`t be edited",
+              });
+            }
+          }
+        });
 
       case "Планшети":
-        const tablet = await Tablet.findOneAndUpdate(
+        await Tablet.findOneAndUpdate(
           {
             _id: req.params.id,
           },
@@ -422,14 +438,21 @@ export const updateItemFields = async (req, res) => {
             },
           },
           { new: true }
-        );
-
-        if (tablet) {
-          res.status(200).json({
-            success: true,
-            items: tablet,
-          });
-        }
+        ).then((doc) => {
+          if (doc) {
+            if (doc.user !== undefined) {
+              res.status(200).json({
+                success: true,
+                items: doc,
+              });
+            } else {
+              res.status(400).json({
+                success: false,
+                error: "Non user items can`t be edited",
+              });
+            }
+          }
+        });
     }
   } catch (error) {
     res.status(400).json({

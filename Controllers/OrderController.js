@@ -17,7 +17,7 @@ export const create = async (req, res) => {
 
     const order = await new OrderModel({
       user_location: {
-        city_location: user_location?.city_location || "", 
+        city_location: user_location?.city_location || "",
       },
       receiver: {
         userIsReceiver: receiver?.userIsReceiver || false,
@@ -188,7 +188,6 @@ export const update = async (req, res) => {
         items: req.body.items,
         total: req.body.total,
         numberOfOrder: req.body.numberOfOrder,
-        user: req.userId,
       },
       { new: true }
     );
