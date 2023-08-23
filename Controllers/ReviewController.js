@@ -122,6 +122,9 @@ export const updateItemReview = async (req, res) => {
         disadvantages: req.body.disadvantages,
         replies: req.body.replies,
       },
+      {
+        timestamps: req.body.replies ? false : true
+      },
       { new: true }
     ).then((doc) => {
       if (!doc) {
