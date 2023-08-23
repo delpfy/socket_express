@@ -131,8 +131,7 @@ export const confirmEmail = async (req, res) => {
 export const registration = async (req, res) => {
   // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
-  const emailConfirmationToken = await bcrypt.hash(req.body.email, salt).replace(/[^a-zA-Z0-9]/g, "");
-
+  const emailConfirmationToken = (await bcrypt.hash(req.body.email, salt)).toString().replace(/[^a-zA-Z0-9]/g, "");
   
   if(!await checkEmailExistence(req.body.email, emailConfirmationToken)){
     return res.status(400).json({
