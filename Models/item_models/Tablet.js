@@ -18,7 +18,7 @@ export default Item.discriminator(
         required: true,
       },
       screenDiagonal: {
-        type: Number,
+        type: String,
         required: true,
       },
       resolution: {
@@ -54,7 +54,7 @@ export default Item.discriminator(
         required: true,
       },
       processorCores: {
-        type: Number,
+        type: String,
         required: true,
       },
       builtInSpeakers: {
