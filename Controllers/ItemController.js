@@ -93,7 +93,7 @@ export const create = async (req, res) => {
           success: true,
           items: monitor,
         });
-       
+
       case "Планшети":
         const tablet = await Tablet.create({
           user: req.userId,
@@ -140,7 +140,6 @@ export const create = async (req, res) => {
           success: true,
           items: tablet,
         });
-
     }
   } catch (error) {
     return res.status(500).json({
@@ -217,13 +216,21 @@ export const getOneCategory = async (req, res) => {
 export const remove = async (req, res) => {
   try {
     // Trying to find item by provided id.
+
     await ItemModel.findOneAndDelete({
       _id: req.params.id,
     })
-      .then(() => {
-        res.status(200).json({
-          success: true,
-        });
+      .then((doc) => {
+        if (doc._user !== undefined) {
+          res.status(200).json({
+            success: true,
+          });
+        } else {
+          res.status(400).json({
+            success: false,
+            error: "Non user items can`t be deleted",
+          });
+        }
       })
       .catch(() => {
         res.status(404).json({
@@ -264,7 +271,7 @@ export const searchItem = async (req, res) => {
 export const updateItemFields = async (req, res) => {
   try {
     // Trying to find item by provided id.
-    console.log(req.body.category)
+    console.log(req.body.category);
     switch (req.body.category) {
       case "Ноутбуки":
         const laptop = await Laptop.findOneAndUpdate(
@@ -272,63 +279,62 @@ export const updateItemFields = async (req, res) => {
             _id: req.params.id,
           },
           {
-          name: req.body.name,
-          description: req.body.description,
-          category: req.body.category,
-          sale: req.body.sale,
-          quantity: req.body.quantity,
-          price: req.body.price,
-          rating: req.body.rating,
-          reviewsAmount: req.body.reviewsAmount,
-          image: req.body.image,
-          fields: {
-            processor: req.body.processor,
-            RAM: req.body.RAM,
-            brand: req.body.brand,
-            series: req.body.series,
-            construction: req.body.construction,
-            operatingSystem: req.body.operatingSystem,
-            screenDiagonal: req.body.screenDiagonal,
-            matrixType: req.body.matrixType,
-            coatingType: req.body.coatingType,
-            resolution: req.body.resolution,
-            touchScreen: req.body.touchScreen,
-            refreshRate: req.body.refreshRate,
-            brightness: req.body.brightness,
-            otherDisplayFeatures: req.body.otherDisplayFeatures,
-            maxRAM: req.body.maxRAM,
-            storageType: req.body.storageType,
-            storageCapacity: req.body.storageCapacity,
-            opticalDrive: req.body.opticalDrive,
-            gpuAdapter: req.body.gpuAdapter,
-            externalPorts: req.body.externalPorts,
-            cardReader: req.body.cardReader,
-            webcam: req.body.webcam,
-            keyboardBacklight: req.body.keyboardBacklight,
-            passiveCooling: req.body.passiveCooling,
-            fingerprintScanner: req.body.fingerprintScanner,
-            numericKeypad: req.body.numericKeypad,
-            intelEvoCertification: req.body.intelEvoCertification,
-            ethernetAdapter: req.body.ethernetAdapter,
-            wifi: req.body.wifi,
-            bluetooth: req.body.bluetooth,
-            weight: req.body.weight,
-            dimensions: req.body.dimensions,
-            bodyMaterial: req.body.bodyMaterial,
-            lidColor: req.body.lidColor,
-            bodyColor: req.body.bodyColor,
-            ruggedLaptop: req.body.ruggedLaptop,
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            sale: req.body.sale,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            rating: req.body.rating,
+            reviewsAmount: req.body.reviewsAmount,
+            image: req.body.image,
+            fields: {
+              processor: req.body.processor,
+              RAM: req.body.RAM,
+              brand: req.body.brand,
+              series: req.body.series,
+              construction: req.body.construction,
+              operatingSystem: req.body.operatingSystem,
+              screenDiagonal: req.body.screenDiagonal,
+              matrixType: req.body.matrixType,
+              coatingType: req.body.coatingType,
+              resolution: req.body.resolution,
+              touchScreen: req.body.touchScreen,
+              refreshRate: req.body.refreshRate,
+              brightness: req.body.brightness,
+              otherDisplayFeatures: req.body.otherDisplayFeatures,
+              maxRAM: req.body.maxRAM,
+              storageType: req.body.storageType,
+              storageCapacity: req.body.storageCapacity,
+              opticalDrive: req.body.opticalDrive,
+              gpuAdapter: req.body.gpuAdapter,
+              externalPorts: req.body.externalPorts,
+              cardReader: req.body.cardReader,
+              webcam: req.body.webcam,
+              keyboardBacklight: req.body.keyboardBacklight,
+              passiveCooling: req.body.passiveCooling,
+              fingerprintScanner: req.body.fingerprintScanner,
+              numericKeypad: req.body.numericKeypad,
+              intelEvoCertification: req.body.intelEvoCertification,
+              ethernetAdapter: req.body.ethernetAdapter,
+              wifi: req.body.wifi,
+              bluetooth: req.body.bluetooth,
+              weight: req.body.weight,
+              dimensions: req.body.dimensions,
+              bodyMaterial: req.body.bodyMaterial,
+              lidColor: req.body.lidColor,
+              bodyColor: req.body.bodyColor,
+              ruggedLaptop: req.body.ruggedLaptop,
+            },
           },
-        },
-        { new: true }
-        
+          { new: true }
         );
         if (laptop) {
           res.status(200).json({
             success: true,
             items: laptop,
           });
-        } 
+        }
 
       case "Монітори":
         const monitor = await Monitor.findOneAndUpdate(
@@ -336,86 +342,86 @@ export const updateItemFields = async (req, res) => {
             _id: req.params.id,
           },
           {
-          name: req.body.name,
-          description: req.body.description,
-          category: req.body.category,
-          sale: req.body.sale,
-          quantity: req.body.quantity,
-          price: req.body.price,
-          rating: req.body.rating,
-          reviewsAmount: req.body.reviewsAmount,
-          image: req.body.image,
-          fields: {
-            brand: req.body.brand,
-            screenDiagonal: req.body.screenDiagonal,
-            matrixType: req.body.matrixType,
-            aspectRatio: req.body.aspectRatio,
-            resolution: req.body.resolution,
-            responseTime: req.body.responseTime,
-            viewingAngles: req.body.viewingAngles,
-            backlightType: req.body.backlightType,
-            brightness: req.body.brightness,
-            contrastRatio: req.body.contrastRatio,
-            screenCoating: req.body.screenCoating,
-            curvedScreen: req.body.curvedScreen,
-            refreshRate: req.body.refreshRate,
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            sale: req.body.sale,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            rating: req.body.rating,
+            reviewsAmount: req.body.reviewsAmount,
+            image: req.body.image,
+            fields: {
+              brand: req.body.brand,
+              screenDiagonal: req.body.screenDiagonal,
+              matrixType: req.body.matrixType,
+              aspectRatio: req.body.aspectRatio,
+              resolution: req.body.resolution,
+              responseTime: req.body.responseTime,
+              viewingAngles: req.body.viewingAngles,
+              backlightType: req.body.backlightType,
+              brightness: req.body.brightness,
+              contrastRatio: req.body.contrastRatio,
+              screenCoating: req.body.screenCoating,
+              curvedScreen: req.body.curvedScreen,
+              refreshRate: req.body.refreshRate,
+            },
           },
-        },
-        { new: true }
+          { new: true }
         );
         if (monitor) {
           res.status(200).json({
             success: true,
             items: monitor,
           });
-        } 
-       
+        }
+
       case "Планшети":
         const tablet = await Tablet.findOneAndUpdate(
           {
             _id: req.params.id,
           },
           {
-          name: req.body.name,
-          description: req.body.description,
-          category: req.body.category,
-          sale: req.body.sale,
-          quantity: req.body.quantity,
-          price: req.body.price,
-          rating: req.body.rating,
-          reviewsAmount: req.body.reviewsAmount,
-          image: req.body.image,
-          fields: {
-            brand: req.body.brand,
-            line: req.body.line,
-            preinstalledOS: req.body.preinstalledOS,
-            screenDiagonal: req.body.screenDiagonal,
-            resolution: req.body.resolution,
-            matrixType: req.body.matrixType,
-            lightSensor: req.body.lightSensor,
-            memoryRAM: req.body.memoryRAM,
-            builtInMemory: req.body.builtInMemory,
-            memoryExpansionSlot: req.body.memoryExpansionSlot,
-            processor: req.body.processor,
-            processorFrequency: req.body.processorFrequency,
-            processorCores: req.body.processorCores,
-            builtInSpeakers: req.body.builtInSpeakers,
-            batteryCapacity: req.body.batteryCapacity,
-            frontCamera: req.body.frontCamera,
-            rearCamera: req.body.rearCamera,
-            wifi: req.body.wifi,
-            cellularNetwork: req.body.cellularNetwork,
-            voiceCommunication: req.body.voiceCommunication,
-            gps: req.body.gps,
-            nfc: req.body.nfc,
-            externalPorts: req.body.externalPorts,
-            weight: req.body.weight,
-            dimensions: req.body.dimensions,
-            bodyColor: req.body.bodyColor,
-            frontPanelColor: req.body.frontPanelColor,
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            sale: req.body.sale,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            rating: req.body.rating,
+            reviewsAmount: req.body.reviewsAmount,
+            image: req.body.image,
+            fields: {
+              brand: req.body.brand,
+              line: req.body.line,
+              preinstalledOS: req.body.preinstalledOS,
+              screenDiagonal: req.body.screenDiagonal,
+              resolution: req.body.resolution,
+              matrixType: req.body.matrixType,
+              lightSensor: req.body.lightSensor,
+              memoryRAM: req.body.memoryRAM,
+              builtInMemory: req.body.builtInMemory,
+              memoryExpansionSlot: req.body.memoryExpansionSlot,
+              processor: req.body.processor,
+              processorFrequency: req.body.processorFrequency,
+              processorCores: req.body.processorCores,
+              builtInSpeakers: req.body.builtInSpeakers,
+              batteryCapacity: req.body.batteryCapacity,
+              frontCamera: req.body.frontCamera,
+              rearCamera: req.body.rearCamera,
+              wifi: req.body.wifi,
+              cellularNetwork: req.body.cellularNetwork,
+              voiceCommunication: req.body.voiceCommunication,
+              gps: req.body.gps,
+              nfc: req.body.nfc,
+              externalPorts: req.body.externalPorts,
+              weight: req.body.weight,
+              dimensions: req.body.dimensions,
+              bodyColor: req.body.bodyColor,
+              frontPanelColor: req.body.frontPanelColor,
+            },
           },
-        },
-        { new: true }
+          { new: true }
         );
 
         if (tablet) {
@@ -423,12 +429,8 @@ export const updateItemFields = async (req, res) => {
             success: true,
             items: tablet,
           });
-        } 
-
+        }
     }
-    
-    
-
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -436,7 +438,6 @@ export const updateItemFields = async (req, res) => {
     });
   }
 };
-
 
 export const update = async (req, res) => {
   try {
@@ -469,10 +470,10 @@ export const update = async (req, res) => {
         items: item,
       });
     }
-  }catch(error) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       error: error,
     });
   }
-}
+};

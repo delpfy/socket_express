@@ -81,6 +81,7 @@ export const removeItemReview = async (req, res) => {
     // Trying to find item by provided id.
     await ReviewModel.findOneAndDelete({
       _id: req.params.reviewId,
+      user: req.userId
     })
       .then((doc) => {
         if (doc) {
