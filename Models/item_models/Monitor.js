@@ -10,7 +10,7 @@ export default Item.discriminator(
         required: true,
       },
       screenDiagonal: {
-        type: Number,
+        type: String,
         required: true,
       },
       matrixType: {
@@ -26,7 +26,7 @@ export default Item.discriminator(
         required: true,
       },
       responseTime: {
-        type: Number,
+        type: String,
         required: true,
       },
       viewingAngles: {
@@ -38,7 +38,7 @@ export default Item.discriminator(
         required: true,
       },
       brightness: {
-        type: Number,
+        type: String,
         required: true,
       },
       contrastRatio: {
@@ -54,7 +54,7 @@ export default Item.discriminator(
         required: true,
       },
       refreshRate: {
-        type: Number,
+        type: String,
         required: true,
       },
     },
