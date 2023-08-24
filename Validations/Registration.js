@@ -4,7 +4,7 @@ export const registrationValidator = [
   body("email", "Wrong format, example: user1@gmail.com").isEmail(),
   body("role", "Wrong role, customer or manager expected")
     .isString()
-    .isIn(["customer", "manager"]),
+    .isIn(["customer"/* , "manager" */]),
   body("expences", "Wrong format, please provide number value").isNumeric(),
   body("password", "Password should be at least 5 characters length").isLength({
     min: 5,
