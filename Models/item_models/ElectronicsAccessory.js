@@ -5,10 +5,10 @@ export default Item.discriminator(
   "ElectronicsAccessory",
   new mongoose.Schema({
     fields: {
-        brand: {
-            type: String,
-            required: true,
-          },
+      brand: {
+        type: String,
+        required: true,
+      },
       type: {
         type: String,
         required: true,
@@ -45,7 +45,6 @@ export default Item.discriminator(
         type: Number,
         required: true,
       },
-      
     },
   })
 );

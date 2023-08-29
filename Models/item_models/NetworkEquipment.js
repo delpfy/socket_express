@@ -5,16 +5,16 @@ export default Item.discriminator(
   "NetworkEquipment",
   new mongoose.Schema({
     fields: {
-        brand: {
-            type: String,
-            required: true,
-          },
+      brand: {
+        type: String,
+        required: true,
+      },
       type: {
         type: String,
         required: true,
       },
       ports: {
-        type: Number,
+        type: [String],
         required: true,
       },
       maxSpeed: {
