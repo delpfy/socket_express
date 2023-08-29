@@ -1,7 +1,9 @@
 import ItemModel from "../Models/Item.js";
 import Laptop from "../Models/item_models/Laptop.js";
 import Monitor from "../Models/item_models/Monitor.js";
-import Tablet from "../Models/item_models/Tablet.js";
+import CablesAndAdapters from "../Models/item_models/CabelsAndAdapters.js";
+import ElectronicsAccessory from "../Models/item_models/ElectronicsAccessory.js";
+import NetworkEquipment from "../Models/item_models/NetworkEquipment.js";
 export const create = async (req, res) => {
   try {
     switch (req.body.category) {
@@ -89,13 +91,8 @@ export const create = async (req, res) => {
             refreshRate: req.body.refreshRate,
           },
         });
-        return res.status(200).json({
-          success: true,
-          items: monitor,
-        });
-
-      case "Планшети":
-        const tablet = await Tablet.create({
+      case "Аксесуари для електроніки":
+        const accessuar = await ElectronicsAccessory.create({
           user: req.userId,
           name: req.body.name,
           description: req.body.description,
@@ -107,38 +104,77 @@ export const create = async (req, res) => {
           reviewsAmount: req.body.reviewsAmount,
           image: req.body.image,
           fields: {
-            brand: req.body.brand,
-            line: req.body.line,
-            preinstalledOS: req.body.preinstalledOS,
-            screenDiagonal: req.body.screenDiagonal,
-            resolution: req.body.resolution,
-            matrixType: req.body.matrixType,
-            lightSensor: req.body.lightSensor,
-            memoryRAM: req.body.memoryRAM,
-            builtInMemory: req.body.builtInMemory,
-            memoryExpansionSlot: req.body.memoryExpansionSlot,
-            processor: req.body.processor,
-            processorFrequency: req.body.processorFrequency,
-            processorCores: req.body.processorCores,
-            builtInSpeakers: req.body.builtInSpeakers,
-            batteryCapacity: req.body.batteryCapacity,
-            frontCamera: req.body.frontCamera,
-            rearCamera: req.body.rearCamera,
-            wifi: req.body.wifi,
-            cellularNetwork: req.body.cellularNetwork,
-            voiceCommunication: req.body.voiceCommunication,
-            gps: req.body.gps,
-            nfc: req.body.nfc,
-            externalPorts: req.body.externalPorts,
-            weight: req.body.weight,
+            type: req.body.type,
+            compatibility: req.body.compatibility,
+            color: req.body.color,
+            material: req.body.material,
+            wireless: req.body.wireless,
+            features: req.body.features,
             dimensions: req.body.dimensions,
-            bodyColor: req.body.bodyColor,
-            frontPanelColor: req.body.frontPanelColor,
+            weight: req.body.weight,
+            brand: req.body.brand,
           },
         });
         return res.status(200).json({
           success: true,
-          items: tablet,
+          items: accessuar,
+        });
+      case "Мережеве обладнання":
+        const netEquip = await NetworkEquipment.create({
+          user: req.userId,
+          name: req.body.name,
+          description: req.body.description,
+          category: req.body.category,
+          sale: req.body.sale,
+          quantity: req.body.quantity,
+          price: req.body.price,
+          rating: req.body.rating,
+          reviewsAmount: req.body.reviewsAmount,
+          image: req.body.image,
+          fields: {
+            type: req.body.type,
+            ports: req.body.ports,
+            maxSpeed: req.body.maxSpeed,
+            powerSupply: req.body.powerSupply,
+            rackMountable: req.body.rackMountable,
+            poeSupport: req.body.poeSupport,
+            vpnSupport: req.body.vpnSupport,
+            firewall: req.body.firewall,
+            dimensions: req.body.dimensions,
+            weight: req.body.weight,
+            color: req.body.color,
+          },
+        });
+        return res.status(200).json({
+          success: true,
+          items: netEquip,
+        });
+      case "Кабелі та перехідники":
+        const cabels = await CablesAndAdapters.create({
+          user: req.userId,
+          name: req.body.name,
+          description: req.body.description,
+          category: req.body.category,
+          sale: req.body.sale,
+          quantity: req.body.quantity,
+          price: req.body.price,
+          rating: req.body.rating,
+          reviewsAmount: req.body.reviewsAmount,
+          image: req.body.image,
+          fields: {
+            connectorType: req.body.connectorType,
+            cableLength: req.body.cableLength,
+            supportedDevices: req.body.supportedDevices,
+            compatibility: req.body.compatibility,
+            material: req.body.material,
+            color: req.body.color,
+            packagingContents: req.body.packagingContents,
+            additionalFeatures: req.body.additionalFeatures,
+          },
+        });
+        return res.status(200).json({
+          success: true,
+          items: cabels,
         });
     }
   } catch (error) {
@@ -219,7 +255,7 @@ export const remove = async (req, res) => {
 
     await ItemModel.findOneAndDelete({
       _id: req.params.id,
-      user: req.userId
+      user: req.userId,
     })
       .then((doc) => {
         if (doc.user !== undefined) {
@@ -277,7 +313,6 @@ export const updateItemFields = async (req, res) => {
         await Laptop.findOneAndUpdate(
           {
             _id: req.params.id,
-            user: req.userId,
           },
           {
             name: req.body.name,
@@ -393,7 +428,6 @@ export const updateItemFields = async (req, res) => {
           }
         });
 
-      case "Планшети":
         await Tablet.findOneAndUpdate(
           {
             _id: req.params.id,
@@ -454,6 +488,142 @@ export const updateItemFields = async (req, res) => {
             }
           }
         });
+
+      case "Аксесуари для електроніки":
+        await ElectronicsAccessory.findOneAndUpdate(
+          {
+            _id: req.params.id,
+          },
+          {
+            user: req.userId,
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            sale: req.body.sale,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            rating: req.body.rating,
+            reviewsAmount: req.body.reviewsAmount,
+            image: req.body.image,
+            fields: {
+              type: req.body.type,
+              compatibility: req.body.compatibility,
+              color: req.body.color,
+              material: req.body.material,
+              wireless: req.body.wireless,
+              features: req.body.features,
+              dimensions: req.body.dimensions,
+              weight: req.body.weight,
+              brand: req.body.brand,
+            },
+          },
+          { new: true }
+        ).then((doc) => {
+          if (doc) {
+            if (doc.user !== undefined) {
+              res.status(200).json({
+                success: true,
+                items: doc,
+              });
+            } else {
+              res.status(400).json({
+                success: false,
+                error: "Non user items can`t be edited",
+              });
+            }
+          }
+        });
+
+      case "Мережеве обладнання":
+        await NetworkEquipment.findOneAndUpdate(
+          {
+            _id: req.params.id,
+          },
+          {
+            user: req.userId,
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            sale: req.body.sale,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            rating: req.body.rating,
+            reviewsAmount: req.body.reviewsAmount,
+            image: req.body.image,
+            fields: {
+              type: req.body.type,
+              ports: req.body.ports,
+              maxSpeed: req.body.maxSpeed,
+              powerSupply: req.body.powerSupply,
+              rackMountable: req.body.rackMountable,
+              poeSupport: req.body.poeSupport,
+              vpnSupport: req.body.vpnSupport,
+              firewall: req.body.firewall,
+              dimensions: req.body.dimensions,
+              weight: req.body.weight,
+              color: req.body.color,
+            },
+          },
+          { new: true }
+        ).then((doc) => {
+          if (doc) {
+            if (doc.user !== undefined) {
+              res.status(200).json({
+                success: true,
+                items: doc,
+              });
+            } else {
+              res.status(400).json({
+                success: false,
+                error: "Non user items can`t be edited",
+              });
+            }
+          }
+        });
+
+      case "Кабелі та перехідники":
+        await CablesAndAdapters.findOneAndUpdate(
+          {
+            _id: req.params.id,
+          },
+          {
+            user: req.userId,
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            sale: req.body.sale,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            rating: req.body.rating,
+            reviewsAmount: req.body.reviewsAmount,
+            image: req.body.image,
+            fields: {
+              connectorType: req.body.connectorType,
+              cableLength: req.body.cableLength,
+              supportedDevices: req.body.supportedDevices,
+              compatibility: req.body.compatibility,
+              material: req.body.material,
+              color: req.body.color,
+              packagingContents: req.body.packagingContents,
+              additionalFeatures: req.body.additionalFeatures,
+            },
+          },
+          { new: true }
+        ).then((doc) => {
+            if (doc) {
+              if (doc.user !== undefined) {
+                res.status(200).json({
+                  success: true,
+                  items: doc,
+                });
+              } else {
+                res.status(400).json({
+                  success: false,
+                  error: "Non user items can`t be edited",
+                });
+              }
+            }
+          });
     }
   } catch (error) {
     res.status(400).json({
