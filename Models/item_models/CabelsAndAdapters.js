@@ -6,6 +6,10 @@ export default Item.discriminator(
     "CablesAndAdapters",
     new mongoose.Schema({
       fields: {
+        brand: {
+            type: String,
+            required: true,
+          },
         connectorType: {
           type: String,
           required: true,

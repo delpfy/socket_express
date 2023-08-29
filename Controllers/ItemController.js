@@ -91,6 +91,10 @@ export const create = async (req, res) => {
             refreshRate: req.body.refreshRate,
           },
         });
+        return res.status(200).json({
+          success: true,
+          items: monitor,
+        });
       case "Аксесуари для електроніки":
         const accessuar = await ElectronicsAccessory.create({
           user: req.userId,
@@ -132,6 +136,7 @@ export const create = async (req, res) => {
           reviewsAmount: req.body.reviewsAmount,
           image: req.body.image,
           fields: {
+            brand: req.body.brand,
             type: req.body.type,
             ports: req.body.ports,
             maxSpeed: req.body.maxSpeed,
@@ -162,6 +167,7 @@ export const create = async (req, res) => {
           reviewsAmount: req.body.reviewsAmount,
           image: req.body.image,
           fields: {
+            brand: req.body.brand,
             connectorType: req.body.connectorType,
             cableLength: req.body.cableLength,
             supportedDevices: req.body.supportedDevices,
@@ -428,67 +434,6 @@ export const updateItemFields = async (req, res) => {
           }
         });
 
-        await Tablet.findOneAndUpdate(
-          {
-            _id: req.params.id,
-          },
-          {
-            name: req.body.name,
-            description: req.body.description,
-            category: req.body.category,
-            sale: req.body.sale,
-            quantity: req.body.quantity,
-            price: req.body.price,
-            rating: req.body.rating,
-            reviewsAmount: req.body.reviewsAmount,
-            image: req.body.image,
-            fields: {
-              brand: req.body.brand,
-              line: req.body.line,
-              preinstalledOS: req.body.preinstalledOS,
-              screenDiagonal: req.body.screenDiagonal,
-              resolution: req.body.resolution,
-              matrixType: req.body.matrixType,
-              lightSensor: req.body.lightSensor,
-              memoryRAM: req.body.memoryRAM,
-              builtInMemory: req.body.builtInMemory,
-              memoryExpansionSlot: req.body.memoryExpansionSlot,
-              processor: req.body.processor,
-              processorFrequency: req.body.processorFrequency,
-              processorCores: req.body.processorCores,
-              builtInSpeakers: req.body.builtInSpeakers,
-              batteryCapacity: req.body.batteryCapacity,
-              frontCamera: req.body.frontCamera,
-              rearCamera: req.body.rearCamera,
-              wifi: req.body.wifi,
-              cellularNetwork: req.body.cellularNetwork,
-              voiceCommunication: req.body.voiceCommunication,
-              gps: req.body.gps,
-              nfc: req.body.nfc,
-              externalPorts: req.body.externalPorts,
-              weight: req.body.weight,
-              dimensions: req.body.dimensions,
-              bodyColor: req.body.bodyColor,
-              frontPanelColor: req.body.frontPanelColor,
-            },
-          },
-          { new: true }
-        ).then((doc) => {
-          if (doc) {
-            if (doc.user !== undefined) {
-              res.status(200).json({
-                success: true,
-                items: doc,
-              });
-            } else {
-              res.status(400).json({
-                success: false,
-                error: "Non user items can`t be edited",
-              });
-            }
-          }
-        });
-
       case "Аксесуари для електроніки":
         await ElectronicsAccessory.findOneAndUpdate(
           {
@@ -551,6 +496,7 @@ export const updateItemFields = async (req, res) => {
             reviewsAmount: req.body.reviewsAmount,
             image: req.body.image,
             fields: {
+              brand: req.body.brand,
               type: req.body.type,
               ports: req.body.ports,
               maxSpeed: req.body.maxSpeed,
@@ -598,6 +544,7 @@ export const updateItemFields = async (req, res) => {
             reviewsAmount: req.body.reviewsAmount,
             image: req.body.image,
             fields: {
+              brand: req.body.brand,
               connectorType: req.body.connectorType,
               cableLength: req.body.cableLength,
               supportedDevices: req.body.supportedDevices,
