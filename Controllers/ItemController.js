@@ -4,6 +4,29 @@ import Monitor from "../Models/item_models/Monitor.js";
 import CablesAndAdapters from "../Models/item_models/CabelsAndAdapters.js";
 import ElectronicsAccessory from "../Models/item_models/ElectronicsAccessory.js";
 import NetworkEquipment from "../Models/item_models/NetworkEquipment.js";
+
+export const uploadFiles = (req, res) => {
+  const formattedDate = new Date().toLocaleString("uk-UA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).replace(/\D+/g, "_");
+  try {
+    const urls = req.files.map((file) => ({
+      url: `/item_images/${formattedDate}--${file.originalname}`,
+    }));
+    res.status(200).json(urls);
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+
 export const create = async (req, res) => {
   try {
     switch (req.body.category) {

@@ -51,13 +51,22 @@ app.use(function(req, res, next) {
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    if (!fs.existsSync("avatars")) {
-      fs.mkdirSync("avatars");
+    if (!fs.existsSync("item_images")) {
+      fs.mkdirSync("item_images");
     }
-    cb(null, "avatars");
+    cb(null, "item_images");
   },
   filename: (_, file, cb) => {
-    cb(null, `${Date.now()}--${file.originalname}`);
+    const formattedDate = new Date().toLocaleString("uk-UA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).replace(/\D+/g, "_");
+
+    cb(null, `${formattedDate}--${file.originalname}`);
   },
 });
 
@@ -68,7 +77,7 @@ app.listen(process.env.PORT || 4000, (err) => {
   return err ? console.log("SERVER ERROR \n" + err) : console.log("SERVER OK");
 });
 app.use(express.json());
-app.use("/avatars", express.static("avatars"));
+app.use("/item_images", express.static("item_images"));
 
 // <User>
 app.get("/", (req, res) => {
@@ -87,12 +96,7 @@ app.post(
   userController.authorization
 );
 
-app.post(
-  "/upload",
-  checkAuthorization,
-  upload.single("image"),
-  userController.uploadFile
-);
+
 
 app.post(
   "/register",
@@ -147,6 +151,12 @@ app.patch(
 //</Review>
 
 // <Items CRUD>
+app.post(
+  "/upload",
+  checkAuthorization,
+  upload.array("item_images", 3),
+  itemController.uploadFiles
+);
 
 app.post(
   "/items",

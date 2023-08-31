@@ -312,18 +312,9 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-export const uploadFile = (req, res) => {
-  try {
-    res.status(200).json({
-      url: `/avatars/${Date.now()}--${req.file.originalname}`,
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      error: error,
-    });
-  }
-};
+
+
+
 
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
