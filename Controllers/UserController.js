@@ -11,8 +11,8 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
     port: 587,
     secure: false,
     auth: {
-      user: /* process.env.EMAIL_KEY */ "cubaru0@gmail.com",
-      pass: /* process.env.PASS_KEY */ "gcvzceshwingecse",
+      user:  process.env.EMAIL_KEY ,
+      pass:  process.env.PASS_KEY ,
     },
   });
   try {
@@ -343,8 +343,8 @@ export const resetPassword = async (req, res) => {
       port: 587,
       secure: false,
       auth: {
-        user: /* process.env.EMAIL_KEY */ "cubaru0@gmail.com",
-        pass: /* process.env.PASS_KEY */ "gcvzceshwingecse",
+        user: process.env.EMAIL_KEY ,
+        pass:  process.env.PASS_KEY ,
       },
     });
 
