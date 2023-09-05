@@ -5,14 +5,14 @@ import UserModel from "../Models/User.js";
 
 export const checkEmailExistence = async (email, emailConfirmationToken) => {
   let testEmailAccount = await nodemailer.createTestAccount();
-  
+
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_KEY ,
-      pass: process.env.PASS_KEY ,
+      user: /* process.env.EMAIL_KEY */ "cubaru0@gmail.com",
+      pass: /* process.env.PASS_KEY */ "gcvzceshwingecse",
     },
   });
   try {
@@ -22,29 +22,11 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
       subject: "Вітаємо у Сокет!",
       text: "Привіт, це перевірка на те, що введена тобою пошта існує",
       html: `
+      <!DOCTYPE html>
       <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-          }
-          h2 {
-            color: #333;
-          }
-          p {
-            color: #555;
-          }
+  <head>
+    <meta charset="UTF-8" />
+    <style>
           
           a {
             display: inline-block;
@@ -55,32 +37,62 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
             border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
-            color: white;
-            background-color: #4CAF50; 
+            color: black;
+            background-color: #ffffff; 
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s linear;
           }
 
           a:hover {
-            background-color: #45a049; 
-            transform: scale(1.05); 
+            background-color: #A0A0A0; 
           }
 
           a:active {
-            background-color: #3e8940; 
-            transform: scale(0.95); 
+            background-color: #A0A0A0; 
           }
 
         </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>Вітаємо у Сокет!</h2>
-          <p>Привіт, це перевірка на те, що введена тобою пошта існує. Натисніть на кнопку нижче, щоб підтвердити свою адресу:</p>
-          <a href="${`https://socketapp.vercel.app/confirm-email/${emailConfirmationToken}`}">Підтвердити адресу</a>
-        </div>
-      </body>
-      </html>
+  </head>
+  <body
+    style="
+      background-color: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Roboto Light', sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    "
+  >
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
+          margin-bottom: 20px;
+          margin-top: 10px;
+          margin-left: 211px;
+        "
+      >
+        <h1 style="font-size: 38px; margin: 0">Socket</h1>
+        <p style="font-size: 24px;  margin-bottom: 50px; margin-top: 0px">.store</p>
+      </div>
+      <p style="font-size: 24px; margin-bottom: 50px">Вітаємо у Socket.store</p>
+      <div style=" margin-top: 60px; margin-bottom: 60px">
+        <p style="font-size: 24px; margin-bottom: 50px; text-align: left; color: white">
+        Привіт, щоб підтвердити створення облікового запису в Sockek.store, перейдіть по кнопці знизу
+        </p>
+        <a style = "color: black" href="${`https://socketapp.vercel.app/confirm-email/${emailConfirmationToken}`}">Підтвердити адресу</a>
+      </div>
+    </div>
+  </body>
+</html>
+
+      
   `,
     });
     console.log(result.response);
@@ -131,9 +143,11 @@ export const confirmEmail = async (req, res) => {
 export const registration = async (req, res) => {
   // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
-  const emailConfirmationToken = (await bcrypt.hash(req.body.email, salt)).toString().replace(/[^a-zA-Z0-9]/g, "");
-  
-  if(!await checkEmailExistence(req.body.email, emailConfirmationToken)){
+  const emailConfirmationToken = (await bcrypt.hash(req.body.email, salt))
+    .toString()
+    .replace(/[^a-zA-Z0-9]/g, "");
+
+  if (!(await checkEmailExistence(req.body.email, emailConfirmationToken))) {
     return res.status(400).json({
       success: false,
       error: "Registration failed",
@@ -312,10 +326,6 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-
-
-
-
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -333,8 +343,8 @@ export const resetPassword = async (req, res) => {
       port: 587,
       secure: false,
       auth: {
-        user: process.env.EMAIL_KEY,
-        pass: process.env.PASS_KEY,
+        user: /* process.env.EMAIL_KEY */ "cubaru0@gmail.com",
+        pass: /* process.env.PASS_KEY */ "gcvzceshwingecse",
       },
     });
 
@@ -347,59 +357,50 @@ export const resetPassword = async (req, res) => {
       
 
       <!DOCTYPE html>
-<html lang="en">
+      <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Socket.store</title>
-    <style>
-      body {
-        background-color: black;
-        font-family: "Roboto Light", sans-serif;
-        color: white;
-        text-align: center;
-      }
-      .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-      h1 {
-        font-size: 24px;
-      }
-      p {
-        font-size: 18px;
-      }
-    </style>
   </head>
-  <body>
-    <div class="container">
+  <body
+    style="
+      background-color: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Roboto Light', sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    "
+  >
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
       <div
         style="
-          height: 60px;
-          padding-bottom: 28px;
           display: flex;
-          flex-direction: row;
-          align-items: flex-start;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
+          margin-bottom: 20px;
+          margin-top: 10px;
+          margin-left: 211px;
         "
       >
-        <h1 style="padding-top: 14px; font-size: 38px">Socket</h1>
-        <p style="font-size: 24px">.store</p>
+        <h1 style="font-size: 38px; margin: 0">Socket</h1>
+        <p style="font-size: 24px;  margin-bottom: 50px; margin-top: 0px">.store</p>
       </div>
-
-      <p>Відновлення пароля</p>
-      <div style="width: 300px; text-align: left">
-        <p style="padding-top: 40px; padding-bottom: 40px">
+      <p style="font-size: 24px; margin-bottom: 50px">Відновлення пароля</p>
+      <div style=" margin-top: 60px; margin-bottom: 60px">
+        <p style="font-size: 24px; margin-bottom: 50px; text-align: left; color: white">
           Привіт, щоб відновити пароль від облікового запису в Socket.store,
-          введіть цей код
+          введіть цей код:
         </p>
+        <h1 style="font-size: 38px; margin: 0">${resetToken.slice(2, 8)}</h1>
       </div>
-      <h1 style="font-size: 38px">${resetToken.slice(2, 8)}</h1>
     </div>
   </body>
 </html>
+
 
     `,
     });
