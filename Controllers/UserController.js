@@ -344,42 +344,63 @@ export const resetPassword = async (req, res) => {
       subject: "Відновлення пароля",
       text: `Ваш код для відновлення пароля: ${resetToken.slice(2, 8)}`,
       html: `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              background-color: #f4f4f4;
-              margin: 0;
-              padding: 0;
-            }
-            .container {
-              max-width: 600px;
-              margin: 0 auto;
-              padding: 20px;
-              background-color: #ffffff;
-              border-radius: 5px;
-              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            }
-            h2 {
-              color: #333;
-            }
-            p {
-              color: #555;
-            }
-            .code {
-              font-size: 24px;
-              color: #007bff;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h2>Для відновлення пароля вам потрібно ввести наступний код:</h2>
-            <p class="code">${resetToken.slice(2, 8)}</p>
-          </div>
-        </body>
-      </html>
+      
+
+      <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.store</title>
+    <style>
+      body {
+        background-color: black;
+        font-family: "Roboto Light", sans-serif;
+        color: white;
+        text-align: center;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      p {
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div
+        style="
+          height: 60px;
+          padding-bottom: 28px;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+        "
+      >
+        <h1 style="padding-top: 14px; font-size: 38px">Socket</h1>
+        <p style="font-size: 24px">.store</p>
+      </div>
+
+      <p>Відновлення пароля</p>
+      <div style="width: 300px; text-align: left">
+        <p style="padding-top: 40px; padding-bottom: 40px">
+          Привіт, щоб відновити пароль від облікового запису в Socket.store,
+          введіть цей код
+        </p>
+      </div>
+      <h1 style="font-size: 38px">${resetToken.slice(2, 8)}</h1>
+    </div>
+  </body>
+</html>
+
     `,
     });
     if (result.accepted) {
