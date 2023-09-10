@@ -19,6 +19,7 @@ import * as basketController from "./Controllers/BasketItemController.js";
 import * as reviewController from "./Controllers/ReviewController.js";
 import * as postController from "./Controllers/PostController.js";
 import * as orderController from "./Controllers/OrderController.js";
+import * as categoriesController from "./Controllers/CategoryController.js";
 
 // validationErrorsHandler - in case that field are named wrong or its value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
@@ -49,7 +50,7 @@ app.use(function(req, res, next) {
   }
 });
 
-const storage = multer.diskStorage({
+const itemImageStorage = multer.diskStorage({
   destination: (_, __, cb) => {
     if (!fs.existsSync("item_images")) {
       fs.mkdirSync("item_images");
@@ -70,7 +71,31 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+
+const categoryImageStorage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    if (!fs.existsSync("category_images")) {
+      fs.mkdirSync("category_images");
+    }
+    cb(null, "category_images");
+  },
+  filename: (_, file, cb) => {
+    const formattedDate = new Date().toLocaleString("uk-UA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).replace(/\D+/g, "_");
+
+    cb(null, `${formattedDate}--${file.originalname}`);
+  },
+});
+
+
+const itemImageUpload = multer({ storage: itemImageStorage });
+const categoryImageUpload = multer({storage: categoryImageStorage });
 
 // Trying to run server on port 4000.
 app.listen(process.env.PORT || 4000, (err) => {
@@ -78,6 +103,7 @@ app.listen(process.env.PORT || 4000, (err) => {
 });
 app.use(express.json());
 app.use("/item_images", express.static("item_images"));
+app.use("/category_images", express.static("category_images"));
 
 // <User>
 app.get("/", (req, res) => {
@@ -154,7 +180,7 @@ app.patch(
 app.post(
   "/upload",
   checkAuthorization,
-  upload.array("item_images", 3),
+  itemImageUpload.array("item_images", 3),
   itemController.uploadFiles
 );
 
@@ -253,3 +279,27 @@ app.get("/orders/user/:id", orderController.getByUser);
 app.delete("/orders/:id", checkAuthorization, /* checkRole, */ orderController.remove);
 
 // </Orders CRUD>
+
+// <ADMIN>
+
+// <categories>
+app.post(
+  "/categories",
+  checkAuthorization,
+  /* checkRole, */
+  validationErrorsHandler,
+  categoriesController.create
+);
+app.get("/categories", categoriesController.getAllCategories);
+app.get("/categories/:id", categoriesController.getCategoryById);
+app.patch("/categories/:id", categoriesController.update);
+app.delete("/categories/:id", checkAuthorization, categoriesController.remove);
+app.post(
+  "/upload-category-image",
+  checkAuthorization,
+  categoryImageUpload.single("category_images"),
+  categoriesController.uploadFile
+);
+// </categories>
+
+// </ADMIN>
