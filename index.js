@@ -20,15 +20,16 @@ import * as reviewController from "./Controllers/ReviewController.js";
 import * as postController from "./Controllers/PostController.js";
 import * as orderController from "./Controllers/OrderController.js";
 import * as categoriesController from "./Controllers/CategoryController.js";
+import * as attributesController from "./Controllers/AttributesController.js";
 
-// validationErrorsHandler - in case that field are named wrong or its value is invalid.
+// validationErrorsHandler - in case that fields are named wrong or their value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
 import multer from "multer";
 
 // Connecting to database.
 mongoose
   .connect(
-    "mongodb+srv://admin:qqqqqq@cluster0.x5jmimk.mongodb.net/test?retryWrites=true&w=majority"
+    "mongodb+srv://admin:qqqqqq@cluster0.x5jmimk.mongodb.net/?retryWrites=true&w=majority"
   )
   .then(() => console.log("DATABASE OK"))
   .catch((err) => console.log("DATABASE ERROR \n" + err));
@@ -300,6 +301,22 @@ app.post(
   categoryImageUpload.single("category_images"),
   categoriesController.uploadFile
 );
+// </categories>
+
+
+// <categories>
+app.post(
+  "/attributes",
+  checkAuthorization,
+  /* checkRole, */
+  validationErrorsHandler,
+  attributesController.create
+);
+
+app.get("/attributes/:category", attributesController.getAttributesByCategory);
+app.patch("/attributes/:id", attributesController.update);
+app.delete("/attributes/:id", checkAuthorization, attributesController.remove);
+
 // </categories>
 
 // </ADMIN>
