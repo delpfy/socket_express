@@ -14,7 +14,7 @@ export const getAttributesByCategory = async (req, res) => {
     // Trying to find item by provided category.
     const category = req.params.category;
     const item = await Attributes.find({ category: { $eq: category } });
-    console.log(item)
+    console.log(item);
     if (!item) {
       res.status(404).json({
         success: false,

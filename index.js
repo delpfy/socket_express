@@ -34,19 +34,22 @@ mongoose
   .then(() => console.log("DATABASE OK"))
   .catch((err) => console.log("DATABASE ERROR \n" + err));
 
-const app = express(); 
+const app = express();
 
-app.use(function(req, res, next) {  
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE,OPTIONS');
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
-    'Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, X-Api-Key'
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,PATCH,DELETE,OPTIONS"
   );
-  res.header('Access-Control-Allow-Credentials', 'true');
-  if ('OPTIONS' === req.method) {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Content-Length, X-Requested-With, X-Api-Key"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  if ("OPTIONS" === req.method) {
     res.sendStatus(200);
-  }
-  else {
+  } else {
     next();
   }
 });
@@ -59,19 +62,20 @@ const itemImageStorage = multer.diskStorage({
     cb(null, "item_images");
   },
   filename: (_, file, cb) => {
-    const formattedDate = new Date().toLocaleString("uk-UA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).replace(/\D+/g, "_");
+    const formattedDate = new Date()
+      .toLocaleString("uk-UA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(/\D+/g, "_");
 
     cb(null, `${formattedDate}--${file.originalname}`);
   },
 });
-
 
 const categoryImageStorage = multer.diskStorage({
   destination: (_, __, cb) => {
@@ -81,22 +85,23 @@ const categoryImageStorage = multer.diskStorage({
     cb(null, "category_images");
   },
   filename: (_, file, cb) => {
-    const formattedDate = new Date().toLocaleString("uk-UA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).replace(/\D+/g, "_");
+    const formattedDate = new Date()
+      .toLocaleString("uk-UA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(/\D+/g, "_");
 
     cb(null, `${formattedDate}--${file.originalname}`);
   },
 });
 
-
 const itemImageUpload = multer({ storage: itemImageStorage });
-const categoryImageUpload = multer({storage: categoryImageStorage });
+const categoryImageUpload = multer({ storage: categoryImageStorage });
 
 // Trying to run server on port 4000.
 app.listen(process.env.PORT || 4000, (err) => {
@@ -112,9 +117,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
-app.post('/reset-password', userController.resetPassword)
-app.get('/confirm-email', userController.confirmEmail)
-app.patch('/update-password', userController.updatePassword)
+app.post("/reset-password", userController.resetPassword);
+app.get("/confirm-email", userController.confirmEmail);
+app.patch("/update-password", userController.updatePassword);
 
 app.post(
   "/authorize",
@@ -122,8 +127,6 @@ app.post(
   validationErrorsHandler,
   userController.authorization
 );
-
-
 
 app.post(
   "/register",
@@ -210,7 +213,6 @@ app.patch(
   itemController.updateItemFields
 );
 
-
 // </Items CRUD>
 
 // <Basket items CRUD>
@@ -255,7 +257,11 @@ app.post(
 );
 app.get("/posts", postController.getAll);
 app.get("/posts/:id", postController.getOne);
-app.delete("/posts/:id", checkAuthorization, /* checkRole, */ postController.remove);
+app.delete(
+  "/posts/:id",
+  checkAuthorization,
+  /* checkRole, */ postController.remove
+);
 app.patch(
   "/posts/:id",
   checkAuthorization,
@@ -264,7 +270,6 @@ app.patch(
   postController.update
 );
 // </Posts CRUD>
-
 
 // <Orders CRUD>
 app.post(
@@ -277,7 +282,11 @@ app.post(
 app.get("/orders", orderController.getAll);
 app.get("/orders/:id", orderController.getOne);
 app.get("/orders/user/:id", orderController.getByUser);
-app.delete("/orders/:id", checkAuthorization, /* checkRole, */ orderController.remove);
+app.delete(
+  "/orders/:id",
+  checkAuthorization,
+  /* checkRole, */ orderController.remove
+);
 
 // </Orders CRUD>
 
@@ -302,7 +311,6 @@ app.post(
   categoriesController.uploadFile
 );
 // </categories>
-
 
 // <categories>
 app.post(
