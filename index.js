@@ -184,7 +184,7 @@ app.patch(
 app.post(
   "/upload",
   checkAuthorization,
-  itemImageUpload.array("item_images", 3),
+  itemImageUpload.array("item_images", 6),
   itemController.uploadFiles
 );
 
