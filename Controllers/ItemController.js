@@ -231,6 +231,7 @@ export const update = async (req, res) => {
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
+        fields: req.body.fields,
       },
       { new: true }
     );
