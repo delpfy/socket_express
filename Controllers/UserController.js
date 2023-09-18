@@ -421,3 +421,20 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+
+export const getAllUsers = async (req, res) => {
+  try {
+    // Finding all orders.
+    const users = await UserModel.find();
+
+    res.status(200).json({
+      success: true,
+      orders: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
