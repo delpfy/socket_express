@@ -11,8 +11,8 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
     port: 587,
     secure: false,
     auth: {
-      user:  process.env.EMAIL_KEY ,
-      pass:  process.env.PASS_KEY ,
+      user: process.env.EMAIL_KEY,
+      pass: process.env.PASS_KEY,
     },
   });
   try {
@@ -193,6 +193,32 @@ export const registration = async (req, res) => {
   }
 };
 
+export const createUser = async (req, res) => {
+  // Generating salt to encrypt password.
+  const salt = await bcrypt.genSalt(10);
+  try {
+    const user = await new UserModel({
+      fullName: req.body.fullName,
+      email: req.body.email,
+      expences: req.body.expences,
+      passwordHash: await bcrypt.hash(req.body.password, salt),
+      role: req.body.role,
+      avatarUrl: req.body.avatar,
+      emailConfirmed: true,
+    }).save();
+    return res.status(200).json({
+      success: true,
+      user: user,
+    });
+  } catch (error) {
+    console.log("CREATE ERROR \n" + error);
+    return res.status(500).json({
+      success: false,
+      error: "CREATE failed",
+    });
+  }
+};
+
 export const authorization = async (req, res) => {
   try {
     // Trying to find user by provided email.
@@ -302,6 +328,48 @@ export const update = async (req, res) => {
   }
 };
 
+export const updateSpecificUser = async (req, res) => {
+  try {
+    // Trying to find item by provided id.
+    await UserModel.updateOne(
+      {
+        _id: req.params.id,
+      },
+      {
+        fullName: req.body.fullName,
+        email: req.body.email,
+        role: req.body.role,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    console.log(userId);
+    const deletedUser = await UserModel.findByIdAndRemove(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json({ message: "User successfully deleted" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the user" });
+  }
+};
+
 export const updatePassword = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   try {
@@ -343,8 +411,8 @@ export const resetPassword = async (req, res) => {
       port: 587,
       secure: false,
       auth: {
-        user: process.env.EMAIL_KEY ,
-        pass:  process.env.PASS_KEY ,
+        user: process.env.EMAIL_KEY,
+        pass: process.env.PASS_KEY,
       },
     });
 
@@ -429,12 +497,27 @@ export const getAllUsers = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      orders: users,
+      users: users,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       error: error,
     });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the user" });
   }
 };

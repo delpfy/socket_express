@@ -118,7 +118,10 @@ app.get("/", (req, res) => {
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
 app.get("/users", checkAuthorization, userController.getAllUsers);
+app.get("/users/:id", checkAuthorization, userController.getUserById);
 app.post("/reset-password", userController.resetPassword);
+app.post("/users", userController.createUser);
+app.delete("/users/:id", userController.remove);
 app.get("/confirm-email", userController.confirmEmail);
 app.patch("/update-password", userController.updatePassword);
 
@@ -142,6 +145,14 @@ app.patch(
   validationErrorsHandler,
   registrationValidator,
   userController.update
+);
+
+app.patch(
+  "/update/:id",
+  checkAuthorization,
+  validationErrorsHandler,
+  registrationValidator,
+  userController.updateSpecificUser
 );
 
 // </User>
