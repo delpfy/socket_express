@@ -61,6 +61,28 @@ export const create = async (req, res) => {
     }
   };
   
+
+  export const searchCategory = async (req, res) => {
+    try {
+      const categories = await Category.find({
+        $or: [{ name: { $regex: req.params.name, $options: "i" } }],
+      });
+      if (categories) {
+        res.status(200).json({
+          success: true,
+          categories: categories,
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          error: "Not found",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error searching items" });
+    }
+  };
+
   export const update = async (req, res) => {
     try {
       const categoryId = req.params.id;

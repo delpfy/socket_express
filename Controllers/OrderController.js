@@ -13,6 +13,7 @@ export const create = async (req, res) => {
       items,
       total,
       numberOfOrder,
+      status,
     } = req.body;
 
     const order = await new OrderModel({
@@ -64,6 +65,7 @@ export const create = async (req, res) => {
       items: items || [],
       total: total || 0,
       numberOfOrder: numberOfOrder || "",
+      status: status || "",
       user: req.userId,
     }).save();
 
@@ -188,6 +190,7 @@ export const update = async (req, res) => {
         items: req.body.items,
         total: req.body.total,
         numberOfOrder: req.body.numberOfOrder,
+        status: req.body.status,
       },
       { new: true }
     );

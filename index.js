@@ -293,6 +293,7 @@ app.post(
 );
 app.get("/orders", orderController.getAll);
 app.get("/orders/:id", orderController.getOne);
+app.patch("/orders/:id", orderController.update);
 app.get("/orders/user/:id", orderController.getByUser);
 app.delete(
   "/orders/:id",
@@ -314,8 +315,10 @@ app.post(
 );
 app.get("/categories", categoriesController.getAllCategories);
 app.get("/categories/:id", categoriesController.getCategoryById);
+app.get("/categories/search/:name", categoriesController.searchCategory);
 app.patch("/categories/:id", categoriesController.update);
 app.delete("/categories/:id", checkAuthorization, categoriesController.remove);
+
 app.post(
   "/upload-category-image",
   checkAuthorization,

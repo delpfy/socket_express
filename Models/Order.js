@@ -128,6 +128,11 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+    enum: ['В обробці', 'Погоджено', 'Скасовано'],
+      required: true,
+    },
   },
   {
     timestamps: true,
