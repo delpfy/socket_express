@@ -21,6 +21,7 @@ import * as postController from "./Controllers/PostController.js";
 import * as orderController from "./Controllers/OrderController.js";
 import * as categoriesController from "./Controllers/CategoryController.js";
 import * as attributesController from "./Controllers/AttributesController.js";
+import * as bannerController from "./Controllers/BannerController.js";
 
 // validationErrorsHandler - in case that fields are named wrong or their value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
@@ -100,8 +101,33 @@ const categoryImageStorage = multer.diskStorage({
   },
 });
 
+
+const bannerImageStorage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    if (!fs.existsSync("banner_images")) {
+      fs.mkdirSync("banner_images");
+    }
+    cb(null, "banner_images");
+  },
+  filename: (_, file, cb) => {
+    const formattedDate = new Date()
+      .toLocaleString("uk-UA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(/\D+/g, "_");
+
+    cb(null, `${formattedDate}--${file.originalname}`);
+  },
+});
+
 const itemImageUpload = multer({ storage: itemImageStorage });
 const categoryImageUpload = multer({ storage: categoryImageStorage });
+const bannerImageUpload = multer({ storage: bannerImageStorage });
 
 // Trying to run server on port 4000.
 app.listen(process.env.PORT || 4000, (err) => {
@@ -110,6 +136,7 @@ app.listen(process.env.PORT || 4000, (err) => {
 app.use(express.json());
 app.use("/item_images", express.static("item_images"));
 app.use("/category_images", express.static("category_images"));
+app.use("/banner_images", express.static("banner_images"));
 
 // <User>
 app.get("/", (req, res) => {
@@ -325,9 +352,11 @@ app.post(
   categoryImageUpload.single("category_images"),
   categoriesController.uploadFile
 );
+
+
 // </categories>
 
-// <categories>
+// <attributes>
 app.post(
   "/attributes",
   checkAuthorization,
@@ -340,6 +369,27 @@ app.get("/attributes/:category", attributesController.getAttributesByCategory);
 app.patch("/attributes/:id", attributesController.update);
 app.delete("/attributes/:id", checkAuthorization, attributesController.remove);
 
-// </categories>
+// </attributes>
+
+// <banners>
+app.post(
+  "/upload-banner-image",
+  checkAuthorization,
+  bannerImageUpload.single("banner_images"),
+   bannerController.uploadImage
+);
+app.post(
+  "/banners",
+  checkAuthorization,
+  /* checkRole, */
+  validationErrorsHandler,
+  bannerController.create
+);
+
+app.get("/banners/", bannerController.getAll);
+app.get("/banners/:id", bannerController.getOne);
+app.patch("/banners/:id", bannerController.update);
+app.delete("/banners/:id", checkAuthorization, bannerController.remove);
+// </banners>
 
 // </ADMIN>
