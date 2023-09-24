@@ -5,18 +5,19 @@ import cron from "node-cron";
 import UserModel from "../Models/User.js";
 import ItemModel from "../Models/Item.js";
 
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_KEY ,
+    pass: process.env.PASS_KEY ,
+  },
+});
+
 export const checkEmailExistence = async (email, emailConfirmationToken) => {
   let testEmailAccount = await nodemailer.createTestAccount();
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_KEY,
-      pass: process.env.PASS_KEY,
-    },
-  });
   try {
     const result = await transporter.sendMail({
       from: '"Сокет" <nodejs@example.com>',
@@ -150,9 +151,7 @@ const createProductHTML = (item) => {
   }" style="max-width: 100%; height: auto;">
       <p>${item.name}</p>
 
-      <p>Ціна: ${
-        item.price - Math.round((item.price * item.sale) / 100)
-      } ₴.</p>
+      <p>Ціна: ${item.price - Math.round((item.price * item.sale) / 100)} ₴</p>
     </div>
   `;
 };
@@ -165,16 +164,6 @@ const sendNewsletter = async () => {
     const productHTML = items.map(createProductHTML).join("");
 
     let testEmailAccount = await nodemailer.createTestAccount();
-
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_KEY,
-        pass: process.env.PASS_KEY,
-      },
-    });
 
     for (const user of users) {
       const message = {
@@ -223,10 +212,63 @@ const sendNewsletter = async () => {
   }
 };
 
-
 cron.schedule("0 0 */3 * *", sendNewsletter);
 /* cron.schedule("* * * * *", sendNewsletter); */
 //cron.schedule("*/3 * * * *", sendNewsletter);
+
+export const sendUrgentNewsletter = async (req, res) => {
+  try {
+    const users = await UserModel.find({ newsletterSub: true });
+
+    let testEmailAccount = await nodemailer.createTestAccount();
+
+    console.log(req.body);
+
+    for (const user of users) {
+      const message = {
+        from: '"Сокет" <nodejs@example.com>',
+        to: user.email,
+        subject: "Розсилка від Socket.store",
+        html: `
+        <!DOCTYPE html>
+      <html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+
+          a:hover {
+            background-color: #A0A0A0; 
+          }
+
+          a:active {
+            background-color: #A0A0A0; 
+          }
+
+          body {
+            background-color: black
+          }
+
+        </style>
+  </head>
+  <body  >
+        <div>
+          <h2>Новина!</h2>
+          ${req.body.new_message}
+          <div>
+          <a style = "color: black" href="https://socketapp.vercel.app/catalog">Каталог</a>
+          </div>
+        </div>
+        </body>
+      `,
+      };
+
+      await transporter.sendMail(message);
+    }
+    console.log("Newsletter success");
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
 
 export const createUser = async (req, res) => {
   // Generating salt to encrypt password.
@@ -527,16 +569,6 @@ export const resetPassword = async (req, res) => {
     const resetToken = await bcrypt.hash(email, salt);
 
     let testEmailAccount = await nodemailer.createTestAccount();
-
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_KEY,
-        pass: process.env.PASS_KEY,
-      },
-    });
 
     let result = await transporter.sendMail({
       from: '"Сокет" <nodejs@example.com>',

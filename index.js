@@ -174,6 +174,14 @@ app.post(
   userController.newsletterUnsubscribe
 );
 
+app.post(
+  "/send-urgent-newsletter",
+  checkAuthorization,
+  validationErrorsHandler,
+  registrationValidator,
+  userController.sendUrgentNewsletter
+);
+
 app.patch(
   "/update",
   checkAuthorization,
