@@ -166,6 +166,14 @@ app.post(
   userController.registration
 );
 
+app.post(
+  "/unsubscribe",
+  checkAuthorization,
+  validationErrorsHandler,
+  registrationValidator,
+  userController.newsletterUnsubscribe
+);
+
 app.patch(
   "/update",
   checkAuthorization,

@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
+import cron from "node-cron";
 import UserModel from "../Models/User.js";
+import ItemModel from "../Models/Item.js";
 
 export const checkEmailExistence = async (email, emailConfirmationToken) => {
   let testEmailAccount = await nodemailer.createTestAccount();
@@ -140,6 +142,119 @@ export const confirmEmail = async (req, res) => {
   }
 };
 
+const createProductHTML = (item) => {
+  return `
+    <div style="display: inline-block; width: 40%; margin: 1%; text-align: center; border: 1px solid #ccc;">
+      <img src="https://www.sidebyside-tech.com${item.image[0]}" alt="${
+    item.image[0]
+  }" style="max-width: 100%; height: auto;">
+      <p>${item.name}</p>
+
+      <p>Ціна: ${
+        item.price - Math.round((item.price * item.sale) / 100)
+      } ₴.</p>
+    </div>
+  `;
+};
+
+const sendNewsletter = async () => {
+  try {
+    const users = await UserModel.find({ newsletterSub: true });
+    const items = await ItemModel.find().sort({ createdAt: -1 }).limit(6);
+
+    const productHTML = items.map(createProductHTML).join("");
+
+    let testEmailAccount = await nodemailer.createTestAccount();
+
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_KEY,
+        pass: process.env.PASS_KEY,
+      },
+    });
+
+    for (const user of users) {
+      const message = {
+        from: '"Сокет" <nodejs@example.com>',
+        to: user.email,
+        subject: "Розсилка від Socket.store",
+        html: `
+        <!DOCTYPE html>
+      <html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+
+          a:hover {
+            background-color: #A0A0A0; 
+          }
+
+          a:active {
+            background-color: #A0A0A0; 
+          }
+
+          body {
+            background-color: black
+          }
+
+        </style>
+  </head>
+  <body  >
+        <div>
+          <h2>Нові товари</h2>
+          ${productHTML}
+          <div>
+          <a style = "color: black" href="https://socketapp.vercel.app/catalog">Каталог</a>
+          </div>
+        </div>
+        </body>
+      `,
+      };
+
+      await transporter.sendMail(message);
+    }
+
+    console.log("Newsletter success");
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
+
+
+cron.schedule("0 0 */3 * *", sendNewsletter);
+/* cron.schedule("* * * * *", sendNewsletter); */
+//cron.schedule("*/3 * * * *", sendNewsletter);
+
+export const createUser = async (req, res) => {
+  // Generating salt to encrypt password.
+  const salt = await bcrypt.genSalt(10);
+  try {
+    const user = await new UserModel({
+      fullName: req.body.fullName,
+      email: req.body.email,
+      expences: req.body.expences,
+      passwordHash: await bcrypt.hash(req.body.password, salt),
+      role: req.body.role,
+      avatarUrl: req.body.avatar,
+      emailConfirmed: true,
+      newsletterSub: req.body.newsletterSub,
+    }).save();
+    return res.status(200).json({
+      success: true,
+      user: user,
+    });
+  } catch (error) {
+    console.log("CREATE ERROR \n" + error);
+    return res.status(500).json({
+      success: false,
+      error: "CREATE failed",
+    });
+  }
+};
+
 export const registration = async (req, res) => {
   // Generating salt to encrypt password.
   const salt = await bcrypt.genSalt(10);
@@ -150,7 +265,7 @@ export const registration = async (req, res) => {
   if (!(await checkEmailExistence(req.body.email, emailConfirmationToken))) {
     return res.status(400).json({
       success: false,
-      error: "Registration failed",
+      error: "Email error",
     });
   }
   try {
@@ -163,6 +278,7 @@ export const registration = async (req, res) => {
       avatarUrl: req.body.avatar,
       emailConfirmationToken: emailConfirmationToken,
       emailConfirmed: false,
+      newsletterSub: req.body.newsletterSub,
     }).save();
 
     // If successful, generate token, in future it will be decrypted.
@@ -193,28 +309,31 @@ export const registration = async (req, res) => {
   }
 };
 
-export const createUser = async (req, res) => {
-  // Generating salt to encrypt password.
+export const newsletterUnsubscribe = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   try {
-    const user = await new UserModel({
-      fullName: req.body.fullName,
-      email: req.body.email,
-      expences: req.body.expences,
-      passwordHash: await bcrypt.hash(req.body.password, salt),
-      role: req.body.role,
-      avatarUrl: req.body.avatar,
-      emailConfirmed: true,
-    }).save();
-    return res.status(200).json({
+    // Trying to find item by provided id.
+    await UserModel.updateOne(
+      {
+        _id: req.userId,
+      },
+      {
+        fullName: req.body.fullName,
+        email: req.body.email,
+        passwordHash: await bcrypt.hash(req.body.password, salt),
+        avatarUrl: req.body.avatarUrl,
+        expences: req.body.expences,
+        newsletterSub: false,
+      }
+    );
+
+    res.status(200).json({
       success: true,
-      user: user,
     });
   } catch (error) {
-    console.log("CREATE ERROR \n" + error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      error: "CREATE failed",
+      error: error.message,
     });
   }
 };
@@ -304,7 +423,7 @@ export const update = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   try {
     // Trying to find item by provided id.
-    await UserModel.updateOne(
+    const user = await UserModel.updateOne(
       {
         _id: req.userId,
       },
@@ -314,7 +433,9 @@ export const update = async (req, res) => {
         passwordHash: await bcrypt.hash(req.body.password, salt),
         avatarUrl: req.body.avatarUrl,
         expences: req.body.expences,
-      }
+        newsletterSub: req.body.newsletterSub,
+      },
+      { new: true }
     );
 
     res.status(200).json({
@@ -339,6 +460,7 @@ export const updateSpecificUser = async (req, res) => {
         fullName: req.body.fullName,
         email: req.body.email,
         role: req.body.role,
+        newsletterSub: req.body.newsletterSub,
       }
     );
 

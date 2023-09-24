@@ -36,6 +36,9 @@ const UserSchema = mongoose.Schema(
     },
     emailConfirmed: {
       type: Boolean,
+    },
+    newsletterSub: {
+      type: Boolean,
     }
   },
   {
