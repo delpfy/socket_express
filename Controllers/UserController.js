@@ -225,8 +225,8 @@ const sendNewsletter = async () => {
   }
 };
 
-sendNewsletter();
-//cron.schedule("0 0 */3 * *", sendNewsletter);
+
+cron.schedule("0 0 */3 * *", sendNewsletter);
 /* cron.schedule("* * * * *", sendNewsletter); */
 //cron.schedule("*/3 * * * *", sendNewsletter);
 
@@ -270,6 +270,7 @@ export const sendUrgentNewsletter = async (req, res) => {
           ${req.body.new_message}
           <div>
           <a style = "color: black" href="https://socketapp.vercel.app/catalog">Каталог</a>
+          <a style = "color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
           </div>
         </div>
         </body>
