@@ -130,7 +130,7 @@ const OrderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-    enum: ['В обробці', 'Погоджено', 'Скасовано'],
+      enum: ["В обробці", "Доставлено", "Скасовано"],
       required: true,
     },
   },
