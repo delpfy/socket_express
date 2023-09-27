@@ -7,7 +7,7 @@ const ItemSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    
+
     name: {
       type: String,
       required: true,
@@ -46,6 +46,10 @@ const ItemSchema = mongoose.Schema(
     reviewsAmount: {
       type: Number,
       required: true,
+    },
+
+    slugString: {
+      type: String,
     },
 
     image: [

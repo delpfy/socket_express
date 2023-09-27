@@ -8,6 +8,7 @@ export const create = async (req, res) => {
       image: req.body.image,
       description: req.body.description,
       content: req.body.content,
+      slugString: req.body.slugString,
     }).save();
     const posts = await PostModel.find();
 
@@ -52,7 +53,7 @@ export const getOne = async (req, res) => {
       });
     } else {
       res.status(200).json({
-        post
+        post,
       });
     }
   } catch (error) {
@@ -60,6 +61,23 @@ export const getOne = async (req, res) => {
       success: false,
       error: error,
     });
+  }
+};
+
+export const getOneBySlug = async (req, res) => {
+  try {
+    const slug_str = req.params.slug_str;
+    const post = await PostModel.findOne({ slugString: { $eq: slug_str } });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.json(post);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the post" });
   }
 };
 
@@ -102,6 +120,7 @@ export const update = async (req, res) => {
         image: req.body.image,
         description: req.body.description,
         content: req.body.content,
+        slugString: req.body.slugString,
       },
       { new: true }
     );

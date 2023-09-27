@@ -1,18 +1,19 @@
 import mongoose from "mongoose";
 
-
 const SubCategorySchema = mongoose.Schema({
-    name: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-      required: true,
-    },
-  });
+  name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  slugString: {
+    type: String,
+  },
+});
 
-  
 const CategorySchema = mongoose.Schema(
   {
     name: {
@@ -22,6 +23,9 @@ const CategorySchema = mongoose.Schema(
     image: {
       type: String,
       required: true,
+    },
+    slugString: {
+      type: String,
     },
     subcategories: [SubCategorySchema],
   },

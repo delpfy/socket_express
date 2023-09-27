@@ -21,6 +21,10 @@ const PostSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+
+    slugString: {
+      type: String,
+    },
   },
   {
     timestamps: true,

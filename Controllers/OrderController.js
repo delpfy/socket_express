@@ -1,4 +1,109 @@
 import OrderModel from "../Models/Order.js";
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_KEY,
+    pass: process.env.PASS_KEY,
+  },
+});
+
+export const sendOrderStatus = async (email, status) => {
+  let testEmailAccount = await nodemailer.createTestAccount();
+
+  try {
+    const result = await transporter.sendMail({
+      from: '"Сокет" <nodejs@example.com>',
+      to: email,
+      subject: "Статус замовлення",
+      text: "Привіт, це перевірка на те, що введена тобою пошта існує",
+      html: `
+      <!DOCTYPE html>
+      <html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+          
+          a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            background-color: #ffffff; 
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s linear;
+          }
+
+          a:hover {
+            background-color: #A0A0A0; 
+          }
+
+          a:active {
+            background-color: #A0A0A0; 
+          }
+
+        </style>
+  </head>
+  <body
+    style="
+      background-color: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Roboto Light', sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    "
+  >
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
+          margin-bottom: 20px;
+          margin-top: 10px;
+          margin-left: 50px;
+        "
+      >
+        <h1 style="font-size: 38px; margin: 0">Socket</h1>
+        <p style="font-size: 24px;  margin-bottom: 50px; margin-top: 0px">.store</p>
+      </div>
+      <p style="font-size: 24px; margin-bottom: 50px">Дякуємо за співпрацю</p>
+      <div style=" margin-top: 60px; margin-bottom: 60px"; text-align: center>
+        <span style="font-size: 24px; margin-bottom: 50px; text-align: center; color: white">
+        Наразі ваш заказ: 
+        </span>
+        <div></div>
+        <span style="font-size: 24px; margin-bottom: 50px; text-align: center; color: white">
+         ${status}
+        </span>
+      </div>
+    </div>
+  </body>
+</html>
+
+      
+  `,
+    });
+    console.log(result.response);
+    return true;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+};
 
 export const create = async (req, res) => {
   // Trying to create new order and if successful, save it to database.
@@ -68,6 +173,8 @@ export const create = async (req, res) => {
       status: status || "",
       user: req.userId,
     }).save();
+
+    sendOrderStatus(user_contact?.email, status);
 
     const orders = await OrderModel.find();
 
@@ -194,6 +301,8 @@ export const update = async (req, res) => {
       },
       { new: true }
     );
+
+    sendOrderStatus(req.body.user_contact.email, req.body.status);
 
     if (order) {
       const orders = await OrderModel.find();

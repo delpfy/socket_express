@@ -37,6 +37,7 @@ export const create = async (req, res) => {
       rating: req.body.rating,
       reviewsAmount: req.body.reviewsAmount,
       image: req.body.image,
+      slugString: req.body.slugString,
       fields: req.body.fields,
     });
     return res.status(200).json({
@@ -91,6 +92,31 @@ export const getOne = async (req, res) => {
     });
   }
 };
+
+export const getOneBySlug = async (req, res) => {
+  try {
+    // Trying to find item by provided category.
+    const slug_str = req.params.slug_str;
+    const item = await ItemModel.findOne({ slugString: { $eq: slug_str } });
+
+    if (!item) {
+      res.status(404).json({
+        success: false,
+        error: "Not found",
+      });
+    } else {
+      res.status(200).json({
+        items: item,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error,
+    });
+  }
+};
+
 export const getOneCategory = async (req, res) => {
   try {
     // Trying to find item by provided category.
@@ -189,6 +215,7 @@ export const updateItemFields = async (req, res) => {
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
+        slugString: req.body.slugString,
         fields: req.body.fields,
       },
       { new: true }
@@ -231,6 +258,7 @@ export const update = async (req, res) => {
         rating: req.body.rating,
         reviewsAmount: req.body.reviewsAmount,
         image: req.body.image,
+        slugString: req.body.slugString,
         fields: req.body.fields,
       },
       { new: true }

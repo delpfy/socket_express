@@ -101,7 +101,6 @@ const categoryImageStorage = multer.diskStorage({
   },
 });
 
-
 const bannerImageStorage = multer.diskStorage({
   destination: (_, __, cb) => {
     if (!fs.existsSync("banner_images")) {
@@ -254,6 +253,7 @@ app.get("/items", itemController.getAll);
 app.get("/items/:id", itemController.getOne);
 app.get("/items/search/:name", itemController.searchItem);
 app.get("/items/category/:category", itemController.getOneCategory);
+app.get("/items/slug/:slug_str", itemController.getOneBySlug);
 app.delete("/items/:id", checkAuthorization, itemController.remove);
 app.patch(
   "/items/:id",
@@ -312,6 +312,7 @@ app.post(
 );
 app.get("/posts", postController.getAll);
 app.get("/posts/:id", postController.getOne);
+app.get("/posts/slug/:slug_str", postController.getOneBySlug);
 app.delete(
   "/posts/:id",
   checkAuthorization,
@@ -358,6 +359,7 @@ app.post(
 );
 app.get("/categories", categoriesController.getAllCategories);
 app.get("/categories/:id", categoriesController.getCategoryById);
+app.get("/categories/slug/:slug_str", categoriesController.getOneBySlug);
 app.get("/categories/search/:name", categoriesController.searchCategory);
 app.patch("/categories/:id", categoriesController.update);
 app.delete("/categories/:id", checkAuthorization, categoriesController.remove);
@@ -368,7 +370,6 @@ app.post(
   categoryImageUpload.single("category_images"),
   categoriesController.uploadFile
 );
-
 
 // </categories>
 
@@ -392,7 +393,7 @@ app.post(
   "/upload-banner-image",
   checkAuthorization,
   bannerImageUpload.single("banner_images"),
-   bannerController.uploadImage
+  bannerController.uploadImage
 );
 app.post(
   "/banners",
