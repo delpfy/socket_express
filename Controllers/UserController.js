@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_KEY ,
-    pass: process.env.PASS_KEY ,
+    user: process.env.EMAIL_KEY,
+    pass: process.env.PASS_KEY,
   },
 });
 
@@ -197,12 +197,25 @@ const sendNewsletter = async () => {
           ${productHTML}
           <div>
           <a style = "color: black" href="https://socketapp.vercel.app/catalog">Каталог</a>
+          <a style = "color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
+          
+          
           </div>
         </div>
         </body>
+        
       `,
       };
-
+      /* await UserModel.updateOne(
+        {
+          email: user.email,
+        },
+        {
+          fullName: user.fullName,
+          email: user.email,
+          newsletterSub: false,
+        }
+      ) */
       await transporter.sendMail(message);
     }
 
@@ -212,7 +225,8 @@ const sendNewsletter = async () => {
   }
 };
 
-cron.schedule("0 0 */3 * *", sendNewsletter);
+sendNewsletter();
+//cron.schedule("0 0 */3 * *", sendNewsletter);
 /* cron.schedule("* * * * *", sendNewsletter); */
 //cron.schedule("*/3 * * * *", sendNewsletter);
 
