@@ -156,6 +156,8 @@ const createProductHTML = (item) => {
   `;
 };
 
+
+
 const sendNewsletter = async () => {
   try {
     const users = await UserModel.find({ newsletterSub: true });
@@ -196,7 +198,7 @@ const sendNewsletter = async () => {
           <h2>Нові товари</h2>
           ${productHTML}
           <div>
-          <a style = "color: black" href="https://socketapp.vercel.app/catalog">Каталог</a>
+          <a style = "color: black" href="https://socketapp.vercel.app/Monitori">Каталог</a>
           <a style = "color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
           
           
@@ -268,7 +270,7 @@ export const sendUrgentNewsletter = async (req, res) => {
           <h2>Новина!</h2>
           ${req.body.new_message}
           <div>
-          <a style = "color: black" href="https://socketapp.vercel.app/catalog">Каталог</a>
+          <a style = "color: black" href="https://socketapp.vercel.app/Monitori">Каталог</a>
           <a style = "color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
           </div>
         </div>
