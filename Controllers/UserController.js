@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 import cron from "node-cron";
 import UserModel from "../Models/User.js";
 import ItemModel from "../Models/Item.js";
+import slugify from "slugify";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -146,17 +147,17 @@ export const confirmEmail = async (req, res) => {
 const createProductHTML = (item) => {
   return `
     <div style="display: inline-block; width: 40%; margin: 1%; text-align: center; border: 1px solid #ccc;">
-      <img src="https://www.sidebyside-tech.com${item.image[0]}" alt="${
+    <a href = "https://socketapp.vercel.app/${slugify(item.category)}/${item.slugString}">
+    <img src="https://www.sidebyside-tech.com${item.image[0]}" alt="${
     item.image[0]
   }" style="max-width: 100%; height: auto;">
+  </a>
       <p>${item.name}</p>
 
       <p>Ціна: ${item.price - Math.round((item.price * item.sale) / 100)} ₴</p>
     </div>
   `;
 };
-
-
 
 const sendNewsletter = async () => {
   try {
