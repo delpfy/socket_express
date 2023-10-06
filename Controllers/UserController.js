@@ -228,7 +228,7 @@ const sendNewsletter = async () => {
   }
 };
 
-cron.schedule("0 0 */3 * *", sendNewsletter);
+cron.schedule("0 9 */3 * *", sendNewsletter);
 /* cron.schedule("* * * * *", sendNewsletter); */
 //cron.schedule("*/3 * * * *", sendNewsletter);
 
