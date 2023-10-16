@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_KEY,
-    pass: process.env.PASS_KEY,
+    user: /* process.env.EMAIL_KEY */ "cubaru0@gmail.com",
+    pass: /* process.env.PASS_KEY */ "gcvzceshwingecse",
   },
 });
 
@@ -147,7 +147,9 @@ export const confirmEmail = async (req, res) => {
 const createProductHTML = (item) => {
   return `
     <div style="display: inline-block; width: 40%; margin: 1%; text-align: center; border: 1px solid #ccc;">
-    <a href = "https://socketapp.vercel.app/${slugify(item.category)}/${item.slugString}">
+    <a href = "https://socketapp.vercel.app/${slugify(item.category)}/${
+    item.slugString
+  }">
     <img src="https://www.sidebyside-tech.com${item.image[0]}" alt="${
     item.image[0]
   }" style="max-width: 100%; height: auto;">
@@ -229,61 +231,72 @@ const sendNewsletter = async () => {
 };
 
 cron.schedule("0 9 */3 * *", sendNewsletter);
+
 /* cron.schedule("* * * * *", sendNewsletter); */
 //cron.schedule("*/3 * * * *", sendNewsletter);
 
 export const sendUrgentNewsletter = async (req, res) => {
-  try {
-    const users = await UserModel.find({ newsletterSub: true });
+  const users = await UserModel.find({ newsletterSub: true });
 
-    let testEmailAccount = await nodemailer.createTestAccount();
+  let testEmailAccount = await nodemailer.createTestAccount();
 
-    console.log(req.body);
-
-    for (const user of users) {
-      const message = {
+  const emailPromises = users.map(async (user) => {
+    try {
+      const result = await transporter.sendMail({
         from: '"Сокет" <nodejs@example.com>',
         to: user.email,
         subject: "Розсилка від Socket.store",
         html: `
-        <!DOCTYPE html>
+      <!DOCTYPE html>
       <html>
-  <head>
-    <meta charset="UTF-8" />
-    <style>
-
-          a:hover {
-            background-color: #A0A0A0; 
-          }
-
-          a:active {
-            background-color: #A0A0A0; 
-          }
-
-          body {
-            background-color: black
-          }
-
-        </style>
-  </head>
-  <body  >
-        <div>
-          <h2>Новина!</h2>
-          ${req.body.new_message}
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            a:hover {
+              background-color: #A0A0A0; 
+            }
+            a:active {
+              background-color: #A0A0A0; 
+            }
+            body {
+              background-color: black;
+            }
+          </style>
+        </head>
+        <body>
           <div>
-          <a style = "color: black" href="https://socketapp.vercel.app/Monitori">Каталог</a>
-          <a style = "color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
+            <h2>Новина!</h2>
+            ${req.body.new_message}
+            <div>
+              <a style="color: black" href="https://socketapp.vercel.app/Monitori">Каталог</a>
+              <a style="color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
+            </div>
           </div>
-        </div>
         </body>
+      </html>
       `,
-      };
+      });
 
-      await transporter.sendMail(message);
+      if (result.accepted) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
     }
-    console.log("Newsletter success");
-  } catch (error) {
-    console.error("Error:", error.message);
+  });
+
+  const emailResults = await Promise.all(emailPromises);
+
+  if (emailResults.every((result) => result === true)) {
+    res.status(200).json({
+      success: true,
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+    });
   }
 };
 
