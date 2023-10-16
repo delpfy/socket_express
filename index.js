@@ -143,8 +143,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
-app.get("/users", checkAuthorization, userController.getAllUsers);
-app.get("/users/:id", checkAuthorization, userController.getUserById);
+app.get("/users",  userController.getAllUsers);
+app.get("/users/:id",  userController.getUserById);
 app.post("/reset-password", userController.resetPassword);
 app.post("/users", userController.createUser);
 app.delete("/users/:id", userController.remove);
@@ -183,7 +183,6 @@ app.post(
 
 app.patch(
   "/update",
-  checkAuthorization,
   validationErrorsHandler,
   registrationValidator,
   userController.update
