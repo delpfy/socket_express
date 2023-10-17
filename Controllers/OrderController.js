@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: process.env.EMAIL_KEY,
-    pass: process.env.PASS_KEY,
+    pass: process.env.PASS_KEY ,
   },
 });
 
@@ -301,6 +301,9 @@ export const update = async (req, res) => {
       },
       { new: true }
     );
+
+    console.log(req.body.user_contact.email);
+    console.log(req.body.status);
 
     sendOrderStatus(req.body.user_contact.email, req.body.status);
 
