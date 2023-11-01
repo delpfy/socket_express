@@ -167,9 +167,6 @@ app.post(
 
 app.post(
   "/unsubscribe",
-  checkAuthorization,
-  validationErrorsHandler,
-  registrationValidator,
   userController.newsletterUnsubscribe
 );
 
