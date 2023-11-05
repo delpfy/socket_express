@@ -187,7 +187,7 @@ app.patch(
 
 app.patch(
   "/update/:id",
-  checkAuthorization,
+
   validationErrorsHandler,
   registrationValidator,
   userController.updateSpecificUser

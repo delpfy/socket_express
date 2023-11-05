@@ -387,7 +387,7 @@ export const newsletterUnsubscribe = async (req, res) => {
     // Trying to find item by provided id.
     await UserModel.updateOne(
       {
-        _id: req.userId,
+        _id: req.body.userId,
       },
       {
         fullName: req.body.fullName,
