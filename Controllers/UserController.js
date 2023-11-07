@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: process.env.EMAIL_KEY,
-    pass: process.env.PASS_KEY ,
+    pass: process.env.PASS_KEY,
   },
 });
 
@@ -71,20 +71,22 @@ export const checkEmailExistence = async (email, emailConfirmationToken) => {
     "
   >
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
-      <div
-        style="
-          display: flex;
-          justify-content: center;
-          text-align: center;
-          width: 100%;
-          margin-bottom: 20px;
-          margin-top: 10px;
-          margin-left: 211px;
-        "
-      >
-        <h1 style="font-size: 38px; margin: 0">Socket</h1>
-        <p style="font-size: 24px;  margin-bottom: 50px; margin-top: 0px">.store</p>
-      </div>
+    <div
+    style="
+      
+      text-align: center;
+      width: 100%;
+      
+      margin-top: 30px;
+      padding-top: 30px;
+      
+      background-color: black
+    "
+  >
+    <span style="font-size: 38px; margin: 0">Socket</span>
+    <span style="font-size: 24px;   margin-top: 0px; height: 60px">.store</span>
+    
+  </div>
       <p style="font-size: 24px; margin-bottom: 50px">Вітаємо у Socket.store</p>
       <div style=" margin-top: 60px; margin-bottom: 60px">
         <p style="font-size: 24px; margin-bottom: 50px; text-align: left; color: white">
@@ -146,13 +148,13 @@ export const confirmEmail = async (req, res) => {
 
 const createProductHTML = (item) => {
   return `
-    <div style="display: inline-block; width: 40%; margin: 1%; text-align: center; border: 1px solid #ccc;">
+    <div style="display: inline-block; width: 45%; margin: 1%; text-align: center; border: 1px solid #ccc;">
     <a href = "https://socketapp.vercel.app/${slugify(item.category)}/${
     item.slugString
-  }">
+  }" style="height: 200px; width: 100px">
     <img src="https://www.sidebyside-tech.com${item.image[0]}" alt="${
     item.image[0]
-  }" style="max-width: 100%; height: auto;">
+  }" style="max-width: 100%; height: 150px; width: 150px">
   </a>
       <p>${item.name}</p>
 
@@ -197,12 +199,56 @@ const sendNewsletter = async () => {
         </style>
   </head>
   <body  >
-        <div>
-          <h2>Нові товари</h2>
+        <div
+        style="
+         
+         text-align: center;
+         
+       "
+        >
+       <div
+       style="
+         
+         text-align: center;
+         width: 100%;
+         
+         
+         background-color: black
+       "
+       >
+       
+       <div
+       style="
+         
+         text-align: center;
+         width: 100%;
+         
+         margin-top: 30px;
+         padding-top: 30px;
+         
+         background-color: black
+       "
+     >
+       <span style="font-size: 38px; margin: 0">Socket</span>
+       <span style="font-size: 24px;   margin-top: 0px; height: 60px">.store</span>
+       
+     </div>
+     <h2 style = "text-align: center; background-color: black; height: 20px ">В нас з'явилися нові товари</h2>
+     <h2 style = "text-align: center; background-color: black; height: 70px; font-size: 18px;">Дякуємо, що обрали нас</h2>
+     </div>
+      
           ${productHTML}
-          <div>
-          <a style = "color: black" href="https://socketapp.vercel.app/Monitori">Каталог</a>
-          <a style = "color: black" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
+          <div style = "margin-top: 40px; margin-left: 35%; text-align: center; width: 100%;">
+          
+          <div style = "padding: 6px; background-color: black; width: 30%; border: 1px solid black; border-radius: 2px; text-align: center">
+          <a style = "color: white; text-decoration: none" href="https://socketapp.vercel.app/Monitori">Каталог</a>
+          </div>
+          
+          
+          <div style = "padding: 6px; margin-top: 10px; background-color: black; width: 30%; border: 1px solid black; border-radius: 2px; text-align: center">
+          
+          <a style = "color: white; text-decoration: none" href="https://socketapp.vercel.app/newsletter-unsubscribe/${user._id}">Відписатися від розсилки</a>
+          </div>
           
           
           </div>
@@ -229,7 +275,7 @@ const sendNewsletter = async () => {
     console.error("Error:", error.message);
   }
 };
-
+sendNewsletter();
 cron.schedule("0 9 */3 * *", sendNewsletter);
 
 /* cron.schedule("* * * * *", sendNewsletter); */
@@ -627,20 +673,22 @@ export const resetPassword = async (req, res) => {
     "
   >
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
-      <div
-        style="
-          display: flex;
-          justify-content: center;
-          text-align: center;
-          width: 100%;
-          margin-bottom: 20px;
-          margin-top: 10px;
-          margin-left: 211px;
-        "
-      >
-        <h1 style="font-size: 38px; margin: 0">Socket</h1>
-        <p style="font-size: 24px;  margin-bottom: 50px; margin-top: 0px">.store</p>
-      </div>
+    <div
+    style="
+      
+      text-align: center;
+      width: 100%;
+      
+      margin-top: 30px;
+      padding-top: 30px;
+      
+      background-color: black
+    "
+  >
+    <span style="font-size: 38px; margin: 0">Socket</span>
+    <span style="font-size: 24px;   margin-top: 0px; height: 60px">.store</span>
+    
+  </div>
       <p style="font-size: 24px; margin-bottom: 50px">Відновлення пароля</p>
       <div style=" margin-top: 60px; margin-bottom: 60px">
         <p style="font-size: 24px; margin-bottom: 50px; text-align: left; color: white">
