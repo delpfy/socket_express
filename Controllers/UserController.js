@@ -275,7 +275,7 @@ const sendNewsletter = async () => {
     console.error("Error:", error.message);
   }
 };
-sendNewsletter();
+
 cron.schedule("0 9 */3 * *", sendNewsletter);
 
 /* cron.schedule("* * * * *", sendNewsletter); */
