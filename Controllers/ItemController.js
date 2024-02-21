@@ -55,11 +55,18 @@ export const create = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     // Finding all items.
-    const items = await ItemModel.find();
-
-    res.status(200).json({
-      success: true,
-      items: items,
+    const items = await ItemModel.find().then((doc) => {
+      if (doc) {
+        res.status(200).json({
+          success: true,
+          items: items,
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          error: "Something went wrong",
+        });
+      }
     });
   } catch (error) {
     res.status(500).json({

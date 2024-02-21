@@ -192,7 +192,6 @@ app.patch(
   registrationValidator,
   userController.updateSpecificUser
 );
-
 // </User>
 
 // <Review>
