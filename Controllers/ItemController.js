@@ -1,6 +1,7 @@
 import ItemModel from "../Models/Item.js";
 
 export const uploadFiles = (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const formattedDate = new Date()
     .toLocaleString("uk-UA", {
       year: "numeric",
