@@ -37,6 +37,8 @@ mongoose
 
 const app = express();
 
+app.use(cors());
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -143,8 +145,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/authme", checkAuthorization, userController.authorizationStatus);
-app.get("/users",  userController.getAllUsers);
-app.get("/users/:id",  userController.getUserById);
+app.get("/users", userController.getAllUsers);
+app.get("/users/:id", userController.getUserById);
 app.post("/reset-password", userController.resetPassword);
 app.post("/users", userController.createUser);
 app.delete("/users/:id", userController.remove);
@@ -165,10 +167,7 @@ app.post(
   userController.registration
 );
 
-app.post(
-  "/unsubscribe",
-  userController.newsletterUnsubscribe
-);
+app.post("/unsubscribe", userController.newsletterUnsubscribe);
 
 app.post(
   "/send-urgent-newsletter",
