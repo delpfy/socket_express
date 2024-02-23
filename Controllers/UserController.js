@@ -152,7 +152,7 @@ const createProductHTML = (item) => {
     <a href = "https://socketapp.vercel.app/${slugify(item.category)}/${
     item.slugString
   }" style="height: 200px; width: 100px">
-    <img src="https://www.sidebyside-tech.com${item.image[0]}" alt="${
+    <img src="https://socket-express-bssu.onrender.com${item.image[0]}" alt="${
     item.image[0]
   }" style="max-width: 100%; height: 150px; width: 150px">
   </a>
