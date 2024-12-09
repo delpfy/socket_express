@@ -22,10 +22,12 @@ import * as orderController from "./Controllers/OrderController.js";
 import * as categoriesController from "./Controllers/CategoryController.js";
 import * as attributesController from "./Controllers/AttributesController.js";
 import * as bannerController from "./Controllers/BannerController.js";
+import * as metricsController from "./Controllers/MetricsController.js";
 
 // validationErrorsHandler - in case that fields are named wrong or their value is invalid.
 import validationErrorsHandler from "./Utils/validationErrorsHandler.js";
 import multer from "multer";
+import google from "googleapis";
 
 // Connecting to database.
 mongoose
@@ -403,4 +405,7 @@ app.patch("/banners/:id", bannerController.update);
 app.delete("/banners/:id", checkAuthorization, bannerController.remove);
 // </banners>
 
+// <metrics>
+app.get("/current_users/", metricsController.getCurrentUsers);
+// </metrics>
 // </ADMIN>
