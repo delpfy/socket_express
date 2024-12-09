@@ -7,7 +7,7 @@ export const getCurrentUsers = async (req, res) => {
       serviceAccount.client_email,
       null,
       serviceAccount.private_key,
-      ["https://www.googleapis.com/auth/analytics.readonly"]
+      ["https://www.googleapis.com/auth/analytics.readonly"] 
     );
 
     await jwtClient.authorize();
@@ -26,7 +26,7 @@ export const getCurrentUsers = async (req, res) => {
     });
 
     const activeUsers = response.data.rows.map((row) => ({
-      /* country: row.dimensionValues[0].value, */
+      country: row.dimensionValues[0].value,
       activeUsers: row.metricValues[0].value,
     }));
 
