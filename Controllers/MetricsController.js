@@ -2,7 +2,7 @@ import { google } from "googleapis";
 
 export const getCurrentUsers = async (req, res) => {
   try {
-    const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_KEY);
+    const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_KEY.split(String.raw`\n`).join('\n'));
     const jwtClient = new google.auth.JWT(
       serviceAccount.client_email,
       null,
