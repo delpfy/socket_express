@@ -407,5 +407,10 @@ app.delete("/banners/:id", checkAuthorization, bannerController.remove);
 
 // <metrics>
 app.get("/current_users/", metricsController.getCurrentUsers);
+app.get("/users_lastmonth/", metricsController.getNewUsersLastMonth);
+app.get("/session_dur_avg/", metricsController.getAverageSessionDuration);
+app.get("/session_total/", metricsController.getTotalSessionsLastMonth);
+app.get("/category_views/", metricsController.getPageViewsByCategory);
+
 // </metrics>
 // </ADMIN>
